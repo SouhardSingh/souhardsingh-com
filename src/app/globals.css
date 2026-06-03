@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin '@tailwindcss/typography';
+
+/* Class-based dark mode for next-themes */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Palette: H S L channel values ─────────────── */
+:root {
+  --bg: 42 100% 97%;
+  --surface: 38 100% 97%;
+  --surface-2: 35 50% 94%;
+  --border: 30 33% 87%;
+  --text: 16 50% 13%;
+  --text-muted: 20 14% 43%;
+  --accent: 38 61% 57%;
+  --accent-hover: 35 51% 50%;
+  --green: 130 17% 55%;
+  --red: 17 47% 53%;
+  --code-bg: 16 50% 13%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --bg: 30 40% 7%;
+  --surface: 30 35% 10%;
+  --surface-2: 30 30% 13%;
+  --border: 30 20% 20%;
+  --text: 38 60% 93%;
+  --text-muted: 30 20% 60%;
+  --accent: 38 61% 57%;
+  --accent-hover: 38 61% 65%;
+  --green: 130 17% 55%;
+  --red: 17 47% 53%;
+  --code-bg: 30 30% 8%;
+}
+
+/* ─── Tailwind 4 design tokens ───────────────────── */
+@theme inline {
+  /* Custom palette (bg-bg, text-text, bg-accent, etc.) */
+  --color-bg: hsl(var(--bg));
+  --color-surface: hsl(var(--surface));
+  --color-surface-2: hsl(var(--surface-2));
+  --color-text: hsl(var(--text));
+  --color-text-muted: hsl(var(--text-muted));
+  --color-accent: hsl(var(--accent));
+  --color-accent-hover: hsl(var(--accent-hover));
+  --color-green: hsl(var(--green));
+  --color-terracotta: hsl(var(--red));
+  --color-code-bg: hsl(var(--code-bg));
+
+  /* shadcn component tokens */
+  --color-background: hsl(var(--bg));
+  --color-foreground: hsl(var(--text));
+  --color-primary: hsl(var(--accent));
+  --color-primary-foreground: hsl(var(--bg));
+  --color-secondary: hsl(var(--surface-2));
+  --color-secondary-foreground: hsl(var(--text));
+  --color-muted: hsl(var(--surface-2));
+  --color-muted-foreground: hsl(var(--text-muted));
+  --color-destructive: hsl(var(--red));
+  --color-destructive-foreground: hsl(var(--bg));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--border));
+  --color-ring: hsl(var(--accent));
+  --color-popover: hsl(var(--surface));
+  --color-popover-foreground: hsl(var(--text));
+  --color-card: hsl(var(--surface));
+  --color-card-foreground: hsl(var(--text));
+
+  /* Fonts */
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Border radius (used by shadcn components) */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+}
+
+@layer base {
+  body {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--text));
+    font-family: var(--font-inter), system-ui, sans-serif;
+  }
+}
