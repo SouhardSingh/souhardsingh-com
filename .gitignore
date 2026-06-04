@@ -10,6 +10,13 @@
 !.yarn/releases
 !.yarn/versions
 
+# editor settings
+.vscode/
+.idea/
+
+# agent settings
+.claude/
+
 # testing
 /coverage
 
@@ -43,6 +50,3 @@ next-env.d.ts
 # local planning notes
 PLANS.md
 docs/
-
-# claude code local settings
-.claude/

@@ -180,6 +180,17 @@ All Framer Motion animations must check `useReducedMotion()`. Use `PageWrapper` 
 - shadcn components use `@base-ui/react` — check component source before assuming Radix UI API
 - ESLint stays on v9 — do not upgrade to v10
 
+## Responsive Design Rules
+
+The site must be presentable on mobile (375px+), tablet (768px+), and desktop (1280px+).
+
+- **Touch targets**: Icon-only buttons must be `size-11` (44px) on mobile, `md:size-8` on desktop. Text links in dense lists need `py-1.5` minimum. Never use `size-8` alone on an interactive element that's visible on mobile.
+- **No horizontal scroll**: Every page must fit within its viewport width at 375px. Test by checking `document.body.scrollWidth <= 375`.
+- **Breakpoint pattern**: Mobile-first. Write base styles for 375px, override at `sm:` (640px), `md:` (768px), `lg:` (1024px). See `docs/plan/03-pages.md` and `docs/plan/04-features.md` for per-component breakpoint tables.
+- **Dynamic viewport height**: Use `dvh` (not `vh`) for full-screen layouts that must avoid the mobile browser chrome and virtual keyboard. Example: `min-h-[calc(100dvh-3.5rem)]` for page content below the navbar.
+- **Touch-hostile interactions**: Force-directed graphs (GardenGraph), canvas cursor trails, and hover-only states must be disabled or replaced on touch devices. Use `@media (pointer: coarse)` or `useMediaQuery('(pointer: coarse)')`.
+- **Grids**: Default to 1 col on mobile, 2 cols at `md:`, 3 cols at `lg:`. See per-feature tables in the plan docs for exceptions.
+
 ## pnpm workspace config
 
 `pnpm-workspace.yaml` suppresses build scripts for `msw`, `sharp`, `unrs-resolver`:

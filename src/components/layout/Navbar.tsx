@@ -47,13 +47,13 @@ function ThemeToggle() {
   useEffect(() => setMounted(true), [])
 
   if (!mounted) {
-    return <div className="size-8" />
+    return <div className="size-11 md:size-8" />
   }
 
   return (
     <button
       onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-      className="text-text-muted hover:bg-surface-2 hover:text-text focus-visible:outline-accent flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="text-text-muted hover:bg-surface-2 hover:text-text focus-visible:outline-accent flex size-11 items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 md:size-8"
       aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {resolvedTheme === 'dark' ? <SunIcon size={16} /> : <MoonIcon size={16} />}
@@ -113,7 +113,7 @@ export function Navbar() {
           {/* Mobile menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
-              className="text-text-muted hover:bg-surface-2 hover:text-text focus-visible:outline-accent flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 md:hidden"
+              className="text-text-muted hover:bg-surface-2 hover:text-text focus-visible:outline-accent flex size-11 items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 md:hidden md:size-8"
               aria-label="Open navigation menu"
             >
               <MenuIcon size={16} />
@@ -121,7 +121,7 @@ export function Navbar() {
             <SheetContent side="right" showCloseButton={false} className="bg-bg w-72 pt-12">
               <button
                 onClick={() => setOpen(false)}
-                className="text-text-muted hover:bg-surface-2 hover:text-text absolute top-3 right-3 flex size-8 items-center justify-center rounded-md"
+                className="text-text-muted hover:bg-surface-2 hover:text-text absolute top-3 right-3 flex size-11 items-center justify-center rounded-md"
                 aria-label="Close menu"
               >
                 <XIcon size={16} />
@@ -135,7 +135,7 @@ export function Navbar() {
                         href={href}
                         onClick={() => setOpen(false)}
                         className={cn(
-                          'block rounded-md px-3 py-2 text-base font-medium transition-colors',
+                          'block rounded-md px-3 py-3 text-base font-medium transition-colors',
                           accent
                             ? 'text-accent'
                             : active

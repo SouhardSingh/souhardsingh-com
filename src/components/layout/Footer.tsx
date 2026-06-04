@@ -56,7 +56,7 @@ export function Footer() {
                 <li key={href}>
                   <Link
                     href={href}
-                    className="text-text-muted hover:text-text text-sm transition-colors"
+                    className="text-text-muted hover:text-text inline-block py-1.5 text-sm transition-colors"
                   >
                     {label}
                   </Link>
@@ -74,7 +74,7 @@ export function Footer() {
                     aria-label={label}
                     target={href.startsWith('http') ? '_blank' : undefined}
                     rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="text-text-muted hover:bg-surface-2 hover:text-text flex size-8 items-center justify-center rounded-md transition-colors"
+                    className="text-text-muted hover:bg-surface-2 hover:text-text flex size-11 items-center justify-center rounded-md transition-colors md:size-8"
                   >
                     <Icon size={16} />
                   </a>
