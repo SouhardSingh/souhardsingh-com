@@ -89,7 +89,7 @@ The `prepare` script (`"husky"`) runs automatically on `pnpm install` to activat
 
 ## Architecture
 
-### What is built (Phase 1 — Foundation)
+### What is built (Phase 1 — Foundation + Phase 2 — Content)
 
 ```
 src/
@@ -110,14 +110,39 @@ src/
     ui/                 ← shadcn components: button, badge, card, separator, tooltip, tabs, sheet
   lib/
     utils.ts            ← cn() helper (clsx + tailwind-merge)
+    mdx.ts              ← getAllPosts(), getPostBySlug(), mdxOptions (rehype/remark plugins)
+    garden.ts           ← getBacklinks(), getAllGardenLinks() — wiki-link [[slug]] graph builder
+  types/
+    index.ts            ← Post, Project, Destination, Book, Film, GuestbookEntry, ExperienceItem
+content/
+  blog/
+    hello-world.mdx
+  garden/
+    what-is-a-digital-garden.mdx
+    learning-in-public.mdx
+  travel/
+    destinations.json   ← 5 visited + 5 wishlist destinations
+  data/
+    projects.ts         ← Project[] with featuredProjects export
+    experience.ts       ← ExperienceItem[]
+    books.ts            ← Book[]
+    films.ts            ← Film[]
 eslint.config.mjs       ← ESLint flat config
 .prettierrc             ← Prettier config
 .husky/pre-commit       ← lint-staged hook
 ```
 
+### MDX pipeline notes
+
+- `getAllPosts(type)` reads from `content/<type>/`, filters `published: true`, sorts newest-first
+- `getPostBySlug(type, slug)` returns `{ frontmatter, source }` — pass `source` to `next-mdx-remote`
+- `mdxOptions` configures: remark-gfm, rehype-slug, rehype-autolink-headings, rehype-pretty-code (github-dark/light)
+- Garden `[[slug]]` wiki-links are parsed at build time; backlinks available via `getBacklinks(slug)`
+- Content data files in `content/data/` are plain TypeScript — import directly, no file I/O
+
 ### What is NOT built yet
 
-Content pipeline (MDX), all pages beyond `/`, static data files, `/ask` API, search/CommandPalette, scripts, tests, CI/CD — see `PLANS.md`.
+All pages beyond `/`, `/ask` API, search/CommandPalette, scripts, tests, CI/CD — see `PLANS.md`.
 
 ### Tailwind 4 — CSS-first tokens
 
