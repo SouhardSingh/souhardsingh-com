@@ -4,11 +4,11 @@ Personal site for Souhard Singh — software engineer, writer, traveler.
 
 ## Stack
 
-- [Next.js 16](https://nextjs.org) — App Router
-- [Tailwind CSS 4](https://tailwindcss.com) — utility-first styling with CSS-first token config
-- [shadcn/ui](https://ui.shadcn.com) — component primitives (base-nova style)
+- [Next.js 16](https://nextjs.org) — App Router, Turbopack
+- [Tailwind CSS 4](https://tailwindcss.com) — CSS-first token config (no `tailwind.config.ts`)
+- [shadcn/ui](https://ui.shadcn.com) — base-nova style (`@base-ui/react` primitives)
 - [Framer Motion](https://www.framer.com/motion/) — animations
-- [MDX](https://mdxjs.com) — content (coming soon)
+- [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote) — MDX content pipeline
 - [next-themes](https://github.com/pacocoursey/next-themes) — dark mode
 
 ## Development
@@ -21,17 +21,33 @@ pnpm dev        # http://localhost:3000
 ## Build
 
 ```bash
-pnpm build      # type-check + production build
+pnpm build      # production build (Turbopack)
 pnpm type-check # TypeScript only
+pnpm lint       # ESLint
+pnpm format     # Prettier
+```
+
+## Content
+
+Written content lives in `content/` as `.mdx` files. Set `published: false` in frontmatter to draft safely — unpublished files won't render.
+
+```
+content/
+  blog/           ← /writing/blog/[slug]
+  garden/         ← /writing/garden/[slug]  (wiki-links supported: [[slug]])
+  travel/
+    destinations.json
+  data/
+    projects.ts   experience.ts   books.ts   films.ts
 ```
 
 ## Environment Variables
 
-Copy `.env.example` to `.env.local` and fill in values (file coming soon):
+Copy `.env.example` to `.env.local` (required for `/ask` and guestbook — not yet implemented):
 
 ```
 # /ask AI chatbot
-DATABASE_URL=          # Neon Postgres (pgvector)
+DATABASE_URL=
 OLLAMA_BASE_URL=
 OLLAMA_MODEL=
 
@@ -46,10 +62,6 @@ NEXTAUTH_URL=
 # Analytics
 NEXT_PUBLIC_PLAUSIBLE_DOMAIN=
 ```
-
-## Content
-
-Written content lives in `content/` as `.mdx` files (not yet set up). Set `published: false` in frontmatter to draft safely — unpublished files won't render.
 
 ## License
 

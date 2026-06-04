@@ -21,17 +21,23 @@ pnpm start        # serve production build
 
 ## Stack (actual versions)
 
-| Package        | Version | Note                                                                              |
-| -------------- | ------- | --------------------------------------------------------------------------------- |
-| next           | 16.2.7  | App Router, Turbopack                                                             |
-| react          | 19.2.4  |                                                                                   |
-| tailwindcss    | 4.x     | CSS-first config — **no `tailwind.config.ts`**                                    |
-| @base-ui/react | 1.x     | Used by shadcn base-nova components                                               |
-| framer-motion  | 12.x    |                                                                                   |
-| next-themes    | 0.4.6   | Class-based dark mode                                                             |
-| lucide-react   | 1.17.0  | No brand icons (GitHub/X/LinkedIn are inline SVGs)                                |
-| eslint         | 9.x     | Flat config (`eslint.config.mjs`), **not** v10 — v10 breaks `eslint-plugin-react` |
-| prettier       | 3.x     | With `prettier-plugin-tailwindcss` for class sorting                              |
+| Package            | Version | Note                                                                              |
+| ------------------ | ------- | --------------------------------------------------------------------------------- |
+| next               | 16.2.7  | App Router, Turbopack                                                             |
+| react              | 19.2.4  |                                                                                   |
+| tailwindcss        | 4.x     | CSS-first config — **no `tailwind.config.ts`**                                    |
+| @base-ui/react     | 1.x     | Used by shadcn base-nova components                                               |
+| framer-motion      | 12.x    |                                                                                   |
+| next-themes        | 0.4.6   | Class-based dark mode                                                             |
+| lucide-react       | 1.17.0  | No brand icons (GitHub/X/LinkedIn are inline SVGs)                                |
+| next-mdx-remote    | 6.x     | MDX rendering via `MDXRemote` (RSC variant from `next-mdx-remote/rsc`)            |
+| gray-matter        | 4.x     | Frontmatter parsing                                                               |
+| reading-time       | 1.x     | Auto-computes `readingTime` in minutes                                            |
+| rehype-pretty-code | 0.14.x  | Syntax highlighting (github-dark / github-light themes via shiki)                 |
+| github-slugger     | 2.x     | Slug generation — matches `rehype-slug` output exactly, handles duplicates        |
+| react-simple-maps  | 3.x     | SVG world map (client-only, wrapped in `WorldMapClient` for `ssr: false`)         |
+| eslint             | 9.x     | Flat config (`eslint.config.mjs`), **not** v10 — v10 breaks `eslint-plugin-react` |
+| prettier           | 3.x     | With `prettier-plugin-tailwindcss` for class sorting                              |
 
 ## Commit Message Convention
 
@@ -89,60 +95,102 @@ The `prepare` script (`"husky"`) runs automatically on `pnpm install` to activat
 
 ## Architecture
 
-### What is built (Phase 1 — Foundation + Phase 2 — Content)
+### What is built
 
 ```
 src/
   app/
-    globals.css         ← Tailwind 4 design tokens + dark mode CSS vars
-    layout.tsx          ← Root layout: fonts, ThemeProvider, Navbar, Footer, easter eggs
-    page.tsx            ← Placeholder home page
+    globals.css                     ← Tailwind 4 design tokens + dark mode CSS vars
+    layout.tsx                      ← Root layout: fonts, ThemeProvider, Navbar, Footer, easter eggs
+    page.tsx                        ← Home: Hero + ActivityFeed
+    about/page.tsx                  ← Bio, skills grid, career timeline, principles
+    work/projects/page.tsx          ← Filter pills + ProjectCard grid
+    writing/blog/page.tsx           ← Category tabs (URL-synced) + PostCard list
+    writing/blog/[slug]/page.tsx    ← MDX post: reading progress, sticky TOC, generateStaticParams
+    travel/page.tsx                 ← WorldMap, stats strip, BucketList
   components/
-    providers.tsx       ← next-themes ThemeProvider (client wrapper)
+    providers.tsx                   ← next-themes ThemeProvider (client wrapper)
     layout/
-      Navbar.tsx        ← Sticky, backdrop-blur, dark mode toggle, Sheet mobile menu
-      Footer.tsx        ← Secondary nav + social icons
-      PageWrapper.tsx   ← Framer Motion fade-up, respects prefers-reduced-motion
+      Navbar.tsx                    ← Sticky, backdrop-blur, dark mode toggle, Sheet mobile menu
+      Footer.tsx                    ← Secondary nav + social icons
+      PageWrapper.tsx               ← Framer Motion fade-up, respects prefers-reduced-motion
+    home/
+      Hero.tsx                      ← Animated gradient orbs, CTA links, CursorTrail
+      CursorTrail.tsx               ← Canvas cursor trail (pointer: fine only, ssr: false)
+      ActivityFeed.tsx              ← Latest post / featured project / travel teaser cards
+    work/
+      ExperienceItem.tsx            ← Timeline entry with Framer Motion stagger
+      ProjectCard.tsx               ← Cover image, tech pills, GitHub/live links
+      ProjectFilter.tsx             ← Client-side tag filter pills
+    writing/
+      PostCard.tsx                  ← Category badge, date, reading time, tag pills
+      CategoryFilter.tsx            ← URL-synced tabs (useRouter + useSearchParams)
+      MDXComponents.tsx             ← Custom h2/h3/p/a/ul/blockquote, Callout, Aside
+      ReadingProgress.tsx           ← Fixed 2px accent bar tracking scroll position
+      TableOfContents.tsx           ← Prop-driven (headings from server), IntersectionObserver active
+    travel/
+      WorldMap.tsx                  ← react-simple-maps SVG map with marker pins
+      WorldMapClient.tsx            ← ssr:false wrapper for WorldMap
+      TravelStats.tsx               ← Visited / continents / wishlist stat strip
+      BucketList.tsx                ← Checkbox list with lazy localStorage initializer
+      BucketListClient.tsx          ← ssr:false wrapper for BucketList
     easter-eggs/
-      EasterEggs.tsx    ← Client wrapper (Next.js 16: ssr:false must be in client component)
+      EasterEggs.tsx                ← Client wrapper (ssr:false must be in client component)
       KonamiListener.tsx
       DevConsoleArt.tsx
-    ui/                 ← shadcn components: button, badge, card, separator, tooltip, tabs, sheet
+    ui/                             ← shadcn components: button, badge, card, separator, tooltip, tabs, sheet
   lib/
-    utils.ts            ← cn() helper (clsx + tailwind-merge)
-    mdx.ts              ← getAllPosts(), getPostBySlug(), mdxOptions (rehype/remark plugins)
-    garden.ts           ← getBacklinks(), getAllGardenLinks() — wiki-link [[slug]] graph builder
+    utils.ts                        ← cn() helper (clsx + tailwind-merge)
+    mdx.ts                          ← getAllPosts(), getPostBySlug() + headings, mdxOptions, extractHeadings()
+    garden.ts                       ← getBacklinks(), getAllGardenLinks() — wiki-link [[slug]] graph
   types/
-    index.ts            ← Post, Project, Destination, Book, Film, GuestbookEntry, ExperienceItem
+    index.ts                        ← Post, Project, Destination, Book, Film, GuestbookEntry, ExperienceItem
+    react-simple-maps.d.ts          ← Hand-written type declarations for react-simple-maps
 content/
-  blog/
-    hello-world.mdx
+  blog/hello-world.mdx
   garden/
     what-is-a-digital-garden.mdx
     learning-in-public.mdx
-  travel/
-    destinations.json   ← 5 visited + 5 wishlist destinations
+  travel/destinations.json         ← 5 visited + 5 wishlist destinations (typed as Destination[])
   data/
-    projects.ts         ← Project[] with featuredProjects export
-    experience.ts       ← ExperienceItem[]
-    books.ts            ← Book[]
-    films.ts            ← Film[]
-eslint.config.mjs       ← ESLint flat config
-.prettierrc             ← Prettier config
-.husky/pre-commit       ← lint-staged hook
+    projects.ts                     ← Project[] + featuredProjects export
+    experience.ts                   ← ExperienceItem[]
+    books.ts                        ← Book[]
+    films.ts                        ← Film[]
+eslint.config.mjs
+.prettierrc
+.husky/pre-commit
 ```
 
-### MDX pipeline notes
+### Path aliases
 
-- `getAllPosts(type)` reads from `content/<type>/`, filters `published: true`, sorts newest-first
-- `getPostBySlug(type, slug)` returns `{ frontmatter, source }` — pass `source` to `next-mdx-remote`
-- `mdxOptions` configures: remark-gfm, rehype-slug, rehype-autolink-headings, rehype-pretty-code (github-dark/light)
-- Garden `[[slug]]` wiki-links are parsed at build time; backlinks available via `getBacklinks(slug)`
-- Content data files in `content/data/` are plain TypeScript — import directly, no file I/O
+| Alias        | Resolves to   | Use for                           |
+| ------------ | ------------- | --------------------------------- |
+| `@/*`        | `./src/*`     | All source files                  |
+| `@content/*` | `./content/*` | Static data and MDX content files |
+
+### MDX pipeline
+
+- `getAllPosts(type)` reads `content/<type>/`, filters `published: true`, sorts newest-first
+- `getPostBySlug(type, slug)` returns `{ frontmatter, source, headings }` — `headings` is extracted server-side via remark AST + `GithubSlugger`, matching `rehype-slug` IDs exactly (including duplicate handling)
+- `mdxOptions` configures: remark-gfm, rehype-slug, rehype-autolink-headings (wrap), rehype-pretty-code (github-dark/light)
+- `TableOfContents` receives `headings` as a prop — no DOM reading, no client-side effect needed
+- Garden `[[slug]]` wiki-links parsed at build time; backlinks via `getBacklinks(slug)`
+- Content data in `content/data/` is plain TypeScript — import via `@content/data/...`, no file I/O
+
+### ssr:false pattern
+
+Next.js 16: `next/dynamic` with `ssr: false` **cannot** be called in Server Components. Wrap in a `'use client'` component first (see `WorldMapClient`, `BucketListClient`, `EasterEggs`).
+
+Components that need `ssr: false`:
+
+- `WorldMap` — uses `react-simple-maps` (browser SVG APIs)
+- `BucketList` — reads `localStorage` in the `useState` lazy initializer (safe only in browser)
+- `CursorTrail` — uses canvas + `window.matchMedia`
 
 ### What is NOT built yet
 
-All pages beyond `/`, `/ask` API, search/CommandPalette, scripts, tests, CI/CD — see `PLANS.md`.
+`/ask` RAG API, search/CommandPalette, garden graph, guestbook, `/now`, `/uses`, `/shelf`, CI/CD, OG image edge function, tests — see `PLANS.md`.
 
 ### Tailwind 4 — CSS-first tokens
 
@@ -175,6 +223,13 @@ Components use `@base-ui/react` primitives, not Radix UI. Implications:
 - **No `asChild` prop** — use `render` prop instead, or pass className/children directly to the primitive
 - `SheetTrigger`, `Dialog.Trigger`, etc. render `<button>` by default and accept className directly
 - Component files are in `src/components/ui/`
+- **Button as link**: do NOT use `<Button render={<Link />}>` — Base UI warns when a non-`<button>` is rendered with `nativeButton: true`. Instead apply `buttonVariants()` directly on `<Link>`:
+  ```tsx
+  import { buttonVariants } from '@/components/ui/button'
+  ;<Link href="..." className={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}>
+    Label
+  </Link>
+  ```
 
 ### Fonts
 
