@@ -1,16 +1,15 @@
 import { PageWrapper } from '@/components/layout/PageWrapper'
+import { Hero } from '@/components/home/Hero'
+import { ActivityFeed } from '@/components/home/ActivityFeed'
+import { getAllPosts } from '@/lib/mdx'
+import { featuredProjects } from '@content/data/projects'
 
 export default function HomePage() {
+  const latestPost = getAllPosts('blog')[0]
   return (
     <PageWrapper>
-      <section className="mx-auto max-w-5xl px-4 py-24 sm:px-6">
-        <h1 className="font-display text-text text-4xl font-bold tracking-tight sm:text-5xl">
-          Souhard Singh
-        </h1>
-        <p className="text-text-muted mt-4 max-w-xl text-lg">
-          Software engineer, writer, and traveler. Building things on the internet.
-        </p>
-      </section>
+      <Hero />
+      <ActivityFeed latestPost={latestPost} featuredProject={featuredProjects[0]} />
     </PageWrapper>
   )
 }
