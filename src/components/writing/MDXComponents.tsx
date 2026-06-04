@@ -1,29 +1,5 @@
 import type { MDXComponents } from 'mdx/types'
-import type { ImgHTMLAttributes } from 'react'
-
-// Inline MDX images — store files in /public/images/blog/<slug>/
-// Use markdown syntax: ![alt text](./image.jpg) or ![alt text](/images/blog/slug/img.jpg)
-// Alt text doubles as the visible caption below the image.
-function MdxImage({ src, alt }: ImgHTMLAttributes<HTMLImageElement>) {
-  if (!src) return null
-  return (
-    <figure className="my-8">
-      {/* Plain <img> is intentional here: next/image requires explicit dimensions which
-          MDX authors shouldn't have to track. Lazy loading + decoding gives the key perf wins. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt ?? ''}
-        loading="lazy"
-        decoding="async"
-        className="border-border w-full rounded-xl border object-cover shadow-sm"
-      />
-      {alt && (
-        <figcaption className="text-text-muted mt-2 text-center text-sm italic">{alt}</figcaption>
-      )}
-    </figure>
-  )
-}
+import { MdxImage } from './MdxImage'
 
 export const mdxComponents: MDXComponents = {
   h2: ({ children, id, ...props }) => (

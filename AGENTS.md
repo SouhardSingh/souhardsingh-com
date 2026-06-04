@@ -135,7 +135,8 @@ src/
     writing/
       PostCard.tsx                  ← Category badge, date, reading time, tag pills
       CategoryFilter.tsx            ← URL-synced tabs (useRouter + useSearchParams)
-      MDXComponents.tsx             ← Custom h2/h3/p/a/ul/blockquote, Callout, Aside
+      MDXComponents.tsx             ← Custom h2/h3/p/a/ul/blockquote, Callout, Aside; img → MdxImage
+      MdxImage.tsx                  ← Client component: inline MDX images with loading skeleton + error fallback (ImageOffIcon)
       ReadingProgress.tsx           ← Fixed 2px accent bar tracking scroll position
       TableOfContents.tsx           ← Prop-driven (headings from server), IntersectionObserver active
     travel/
@@ -149,13 +150,16 @@ src/
       KonamiListener.tsx
       DevConsoleArt.tsx
     ui/                             ← shadcn components: button, badge, card, separator, tooltip, tabs, sheet
-                                       cloud-image.tsx — STUB: CloudImage (next/image + loading skeleton + error fallback); not yet wired to pages
+                                       cloud-image.tsx — CloudImage: next/image wrapper with loading skeleton + error fallback; use for R2/CDN images
   lib/
     utils.ts                        ← cn() helper (clsx + tailwind-merge)
     mdx.ts                          ← getAllPosts(), getPostBySlug() + headings, mdxOptions, extractHeadings()
     garden.ts                       ← getBacklinks(), getAllGardenLinks() — wiki-link [[slug]] graph
-    r2.ts                           ← STUB: R2 URL helpers (r2Url, resolveImageSrc, R2_PATHS); needs NEXT_PUBLIC_R2_BASE_URL env var
-    db/                             ← NOT YET CREATED — see docs/plan/07-infrastructure.md §8 for full spec
+    storage/
+      index.ts                      ← Provider-agnostic blob storage (StorageProvider interface + factory); env: STORAGE_PROVIDER=r2|blob|local
+    db/
+      index.ts                      ← Drizzle client; Neon HTTP driver by default; swap to postgres-js via 2-line change for local/self-hosted
+      schema.ts                     ← guestbook_entries, post_views tables; pgvector embeddings stub for Phase 5
   types/
     index.ts                        ← Post, Project, Destination, Book extends MediaBase, Film extends MediaBase, GuestbookEntry, ExperienceItem
     react-simple-maps.d.ts          ← Hand-written type declarations for react-simple-maps (includes center, onMoveEnd on ZoomableGroup)
@@ -231,19 +235,15 @@ Components that need `ssr: false`:
 
 ### What is NOT built yet
 
-| Item                                           | Notes                                                       |
-| ---------------------------------------------- | ----------------------------------------------------------- |
-| `src/lib/db/` (Drizzle client + schema)        | Packages installed; see `docs/plan/07-infrastructure.md §8` |
-| `drizzle.config.ts`, `package.json` db scripts | Spec in 07-infra §8                                         |
-| `.env.example`                                 | Document all env vars before deploy                         |
-| `next.config.ts` R2 remotePatterns             | Do after `NEXT_PUBLIC_R2_BASE_URL` is set                   |
-| OG image edge function (`app/og/route.tsx`)    | See 07-infra §4                                             |
-| RSS feed (`app/feed.xml/route.ts`)             | See 07-infra §5                                             |
-| CI/CD (GitHub Actions)                         | See 07-infra §2                                             |
-| `/ask` RAG, Pagefind, CommandPalette           | Phase 5 — needs DB first                                    |
-| Garden graph, `/writing/garden`                | Phase 4                                                     |
-| Guestbook, `/shelf`, `/now`, `/uses`           | Phase 4 — needs DB                                          |
-| Tests (Jest, Playwright)                       | Phase 6                                                     |
+| Item                                        | Notes                    |
+| ------------------------------------------- | ------------------------ |
+| OG image edge function (`app/og/route.tsx`) | See 07-infra §4          |
+| RSS feed (`app/feed.xml/route.ts`)          | See 07-infra §5          |
+| CI/CD (GitHub Actions)                      | See 07-infra §2          |
+| `/ask` RAG, Pagefind, CommandPalette        | Phase 5 — needs DB first |
+| Garden graph, `/writing/garden`             | Phase 4                  |
+| Guestbook, `/shelf`, `/now`, `/uses`        | Phase 4 — needs DB       |
+| Tests (Jest, Playwright)                    | Phase 6                  |
 
 See `PLANS.md` for priority order and full status table.
 
