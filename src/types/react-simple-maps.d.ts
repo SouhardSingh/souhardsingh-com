@@ -12,8 +12,10 @@ declare module 'react-simple-maps' {
 
   interface ZoomableGroupProps {
     zoom?: number
+    center?: [number, number]
     minZoom?: number
     maxZoom?: number
+    onMoveEnd?: (position: { coordinates: [number, number]; zoom: number }) => void
     children?: ReactNode
   }
   export function ZoomableGroup(props: ZoomableGroupProps): JSX.Element

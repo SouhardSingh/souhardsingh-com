@@ -66,24 +66,23 @@ export type ReadStatus = 'read' | 'reading' | 'want'
 export type WatchStatus = 'watched' | 'watching' | 'want'
 export type Rating = 1 | 2 | 3 | 4 | 5
 
-export interface Book {
+interface MediaBase {
   title: string
-  author: string
   year: number
-  status: ReadStatus
   rating?: Rating
   note?: string
+}
+
+export interface Book extends MediaBase {
+  author: string
+  status: ReadStatus
   dateRead?: string
   cover?: string
 }
 
-export interface Film {
-  title: string
+export interface Film extends MediaBase {
   director: string
-  year: number
   status: WatchStatus
-  rating?: Rating
-  note?: string
   dateWatched?: string
 }
 

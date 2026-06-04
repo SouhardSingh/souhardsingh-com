@@ -27,18 +27,34 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://souhardsingh.com'),
   title: {
     template: '%s — Souhard Singh',
-    default: 'Souhard Singh',
+    default: 'Souhard Singh — Software Engineer',
   },
-  description: 'Software engineer, writer, and traveler.',
+  description:
+    'Software engineer focused on backend systems and distributed infrastructure. Writing about engineering, travel, and the things in between.',
+  keywords: ['software engineer', 'backend', 'distributed systems', 'TypeScript', 'Go', 'Next.js'],
+  authors: [{ name: 'Souhard Singh', url: 'https://souhardsingh.com' }],
+  creator: 'Souhard Singh',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://souhardsingh.com',
     siteName: 'Souhard Singh',
+    title: 'Souhard Singh — Software Engineer',
+    description:
+      'Software engineer focused on backend systems and distributed infrastructure. Writing about engineering, travel, and the things in between.',
   },
   twitter: {
     card: 'summary_large_image',
     creator: '@souhardsingh',
+  },
+  alternates: {
+    canonical: 'https://souhardsingh.com',
+    types: { 'application/rss+xml': 'https://souhardsingh.com/feed.xml' },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
 }
 

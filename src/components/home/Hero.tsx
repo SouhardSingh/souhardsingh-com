@@ -21,7 +21,7 @@ export function Hero() {
   const reduced = useReducedMotion()
 
   return (
-    <section className="relative flex min-h-[calc(100dvh-3.5rem)] items-center overflow-hidden px-4 sm:px-6">
+    <section className="relative flex min-h-[calc(68dvh-3.5rem)] items-center overflow-hidden px-4 sm:px-6">
       {!reduced &&
         ORBS.map((orb, i) => (
           <motion.div

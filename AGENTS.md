@@ -21,23 +21,26 @@ pnpm start        # serve production build
 
 ## Stack (actual versions)
 
-| Package            | Version | Note                                                                              |
-| ------------------ | ------- | --------------------------------------------------------------------------------- |
-| next               | 16.2.7  | App Router, Turbopack                                                             |
-| react              | 19.2.4  |                                                                                   |
-| tailwindcss        | 4.x     | CSS-first config — **no `tailwind.config.ts`**                                    |
-| @base-ui/react     | 1.x     | Used by shadcn base-nova components                                               |
-| framer-motion      | 12.x    |                                                                                   |
-| next-themes        | 0.4.6   | Class-based dark mode                                                             |
-| lucide-react       | 1.17.0  | No brand icons (GitHub/X/LinkedIn are inline SVGs)                                |
-| next-mdx-remote    | 6.x     | MDX rendering via `MDXRemote` (RSC variant from `next-mdx-remote/rsc`)            |
-| gray-matter        | 4.x     | Frontmatter parsing                                                               |
-| reading-time       | 1.x     | Auto-computes `readingTime` in minutes                                            |
-| rehype-pretty-code | 0.14.x  | Syntax highlighting (github-dark / github-light themes via shiki)                 |
-| github-slugger     | 2.x     | Slug generation — matches `rehype-slug` output exactly, handles duplicates        |
-| react-simple-maps  | 3.x     | SVG world map (client-only, wrapped in `WorldMapClient` for `ssr: false`)         |
-| eslint             | 9.x     | Flat config (`eslint.config.mjs`), **not** v10 — v10 breaks `eslint-plugin-react` |
-| prettier           | 3.x     | With `prettier-plugin-tailwindcss` for class sorting                              |
+| Package                  | Version | Note                                                                              |
+| ------------------------ | ------- | --------------------------------------------------------------------------------- |
+| next                     | 16.2.7  | App Router, Turbopack                                                             |
+| react                    | 19.2.4  |                                                                                   |
+| tailwindcss              | 4.x     | CSS-first config — **no `tailwind.config.ts`**                                    |
+| @base-ui/react           | 1.x     | Used by shadcn base-nova components                                               |
+| framer-motion            | 12.x    |                                                                                   |
+| next-themes              | 0.4.6   | Class-based dark mode                                                             |
+| lucide-react             | 1.17.0  | No brand icons (GitHub/X/LinkedIn are inline SVGs)                                |
+| next-mdx-remote          | 6.x     | MDX rendering via `MDXRemote` (RSC variant from `next-mdx-remote/rsc`)            |
+| gray-matter              | 4.x     | Frontmatter parsing                                                               |
+| reading-time             | 1.x     | Auto-computes `readingTime` in minutes                                            |
+| rehype-pretty-code       | 0.14.x  | Syntax highlighting (github-dark / github-light themes via shiki)                 |
+| github-slugger           | 2.x     | Slug generation — matches `rehype-slug` output exactly, handles duplicates        |
+| react-simple-maps        | 3.x     | SVG world map (client-only, wrapped in `WorldMapClient` for `ssr: false`)         |
+| drizzle-orm              | 0.45.x  | ORM — installed, DB files not yet created (see PLANS.md)                          |
+| @neondatabase/serverless | 1.x     | Neon HTTP driver — installed, not yet wired                                       |
+| drizzle-kit              | 0.31.x  | Dev tool for schema migrations — installed, config not yet created                |
+| eslint                   | 9.x     | Flat config (`eslint.config.mjs`), **not** v10 — v10 breaks `eslint-plugin-react` |
+| prettier                 | 3.x     | With `prettier-plugin-tailwindcss` for class sorting                              |
 
 ## Commit Message Convention
 
@@ -102,22 +105,29 @@ src/
   app/
     globals.css                     ← Tailwind 4 design tokens + dark mode CSS vars
     layout.tsx                      ← Root layout: fonts, ThemeProvider, Navbar, Footer, easter eggs
-    page.tsx                        ← Home: Hero + ActivityFeed
+    page.tsx                        ← Home: Hero + ActivityFeed + SelectedWork + RecentPosts; JSON-LD Person schema
+    robots.ts                       ← Crawl rules + sitemap pointer (Next.js file-based metadata)
+    sitemap.ts                      ← Auto-generated sitemap from static routes + blog posts
+    icon.svg                        ← SVG favicon (Next.js App Router file-based, overrides favicon.ico)
     about/page.tsx                  ← Bio, skills grid, career timeline, principles
+    work/page.tsx                   ← Redirect → /work/projects (until more sub-sections exist)
     work/projects/page.tsx          ← Filter pills + ProjectCard grid
+    writing/page.tsx                ← Redirect → /writing/blog (until garden/building are live)
     writing/blog/page.tsx           ← Category tabs (URL-synced) + PostCard list
     writing/blog/[slug]/page.tsx    ← MDX post: reading progress, sticky TOC, generateStaticParams
     travel/page.tsx                 ← WorldMap, stats strip, BucketList
   components/
     providers.tsx                   ← next-themes ThemeProvider (client wrapper)
     layout/
-      Navbar.tsx                    ← Sticky, backdrop-blur, dark mode toggle, Sheet mobile menu
+      Navbar.tsx                    ← Sticky, backdrop-blur, dark mode toggle, Sheet mobile menu; SSLogo uses outlined two-tone SVG (accent border + split S/S colors) + full name on sm+
       Footer.tsx                    ← Secondary nav + social icons
       PageWrapper.tsx               ← Framer Motion fade-up, respects prefers-reduced-motion
     home/
-      Hero.tsx                      ← Animated gradient orbs, CTA links, CursorTrail
+      Hero.tsx                      ← Animated gradient orbs, CTA links, CursorTrail; min-h 68dvh (not full screen)
       CursorTrail.tsx               ← Canvas cursor trail (pointer: fine only, ssr: false)
       ActivityFeed.tsx              ← Latest post / featured project / travel teaser cards
+      SelectedWork.tsx              ← Grid of featured ProjectCards with "All projects →" link
+      RecentPosts.tsx               ← Horizontal list of latest blog posts with date + category badge
     work/
       ExperienceItem.tsx            ← Timeline entry with Framer Motion stagger
       ProjectCard.tsx               ← Cover image, tech pills, GitHub/live links
@@ -129,7 +139,7 @@ src/
       ReadingProgress.tsx           ← Fixed 2px accent bar tracking scroll position
       TableOfContents.tsx           ← Prop-driven (headings from server), IntersectionObserver active
     travel/
-      WorldMap.tsx                  ← react-simple-maps SVG map with marker pins
+      WorldMap.tsx                  ← react-simple-maps: fills countries (visited=accent, wishlist=green); smart center/zoom when all visited in one continent; city pins on top
       WorldMapClient.tsx            ← ssr:false wrapper for WorldMap
       TravelStats.tsx               ← Visited / continents / wishlist stat strip
       BucketList.tsx                ← Checkbox list with lazy localStorage initializer
@@ -139,13 +149,16 @@ src/
       KonamiListener.tsx
       DevConsoleArt.tsx
     ui/                             ← shadcn components: button, badge, card, separator, tooltip, tabs, sheet
+                                       cloud-image.tsx — STUB: CloudImage (next/image + loading skeleton + error fallback); not yet wired to pages
   lib/
     utils.ts                        ← cn() helper (clsx + tailwind-merge)
     mdx.ts                          ← getAllPosts(), getPostBySlug() + headings, mdxOptions, extractHeadings()
     garden.ts                       ← getBacklinks(), getAllGardenLinks() — wiki-link [[slug]] graph
+    r2.ts                           ← STUB: R2 URL helpers (r2Url, resolveImageSrc, R2_PATHS); needs NEXT_PUBLIC_R2_BASE_URL env var
+    db/                             ← NOT YET CREATED — see docs/plan/07-infrastructure.md §8 for full spec
   types/
-    index.ts                        ← Post, Project, Destination, Book, Film, GuestbookEntry, ExperienceItem
-    react-simple-maps.d.ts          ← Hand-written type declarations for react-simple-maps
+    index.ts                        ← Post, Project, Destination, Book extends MediaBase, Film extends MediaBase, GuestbookEntry, ExperienceItem
+    react-simple-maps.d.ts          ← Hand-written type declarations for react-simple-maps (includes center, onMoveEnd on ZoomableGroup)
 content/
   blog/hello-world.mdx
   garden/
@@ -178,6 +191,34 @@ eslint.config.mjs
 - Garden `[[slug]]` wiki-links parsed at build time; backlinks via `getBacklinks(slug)`
 - Content data in `content/data/` is plain TypeScript — import via `@content/data/...`, no file I/O
 
+### Blog images
+
+**Storage**: `public/images/blog/<post-slug>/` for inline images, `public/images/blog/covers/` for cover images. Next.js serves these from Vercel's edge at no extra cost; `next/image` handles format conversion (WebP) and resizing at request time.
+
+**In MDX**: Standard markdown image syntax — `![caption](./image.jpg)` or `![caption](/images/blog/slug/image.jpg)`. The `img` key in `mdxComponents` renders them as lazy-loaded `<figure>` with the alt text as a visible caption. Do **not** use `<img>` JSX directly in MDX — use the markdown syntax so the component override applies.
+
+**Cover image**: Add `coverImage: /images/blog/covers/slug.jpg` to the MDX frontmatter. The `Post.coverImage` field carries this through; wire it into PostCard and the blog post page header when needed.
+
+**Scale-up path**: When repo images exceed ~150MB, migrate to Vercel Blob (`@vercel/blob`) — the `put()` API returns a URL, swap `/public/` paths for blob URLs, zero other changes needed.
+
+### URL structure — writing and work
+
+`/writing` and `/work` are **section hubs** that redirect to their single live sub-section today. When a second sub-section ships, the redirect becomes a proper landing page.
+
+```
+/writing            ← hub (redirects → /writing/blog today)
+  /writing/blog     ← polished long-form essays  ✅ live
+  /writing/garden   ← digital garden notes        ⬜ Phase 4
+  /writing/building ← building-in-public logs     ⬜ Phase 4
+
+/work               ← hub (redirects → /work/projects today)
+  /work/projects    ← portfolio listing            ✅ live
+  /work/experience  ← career timeline              ⬜ Phase 4
+  /work/architecture ← system design writeups      ⬜ Phase 4
+```
+
+Nav links always point to `/writing` and `/work` — never to sub-pages — so no nav changes are needed when new sub-sections launch.
+
 ### ssr:false pattern
 
 Next.js 16: `next/dynamic` with `ssr: false` **cannot** be called in Server Components. Wrap in a `'use client'` component first (see `WorldMapClient`, `BucketListClient`, `EasterEggs`).
@@ -190,7 +231,21 @@ Components that need `ssr: false`:
 
 ### What is NOT built yet
 
-`/ask` RAG API, search/CommandPalette, garden graph, guestbook, `/now`, `/uses`, `/shelf`, CI/CD, OG image edge function, tests — see `PLANS.md`.
+| Item                                           | Notes                                                       |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| `src/lib/db/` (Drizzle client + schema)        | Packages installed; see `docs/plan/07-infrastructure.md §8` |
+| `drizzle.config.ts`, `package.json` db scripts | Spec in 07-infra §8                                         |
+| `.env.example`                                 | Document all env vars before deploy                         |
+| `next.config.ts` R2 remotePatterns             | Do after `NEXT_PUBLIC_R2_BASE_URL` is set                   |
+| OG image edge function (`app/og/route.tsx`)    | See 07-infra §4                                             |
+| RSS feed (`app/feed.xml/route.ts`)             | See 07-infra §5                                             |
+| CI/CD (GitHub Actions)                         | See 07-infra §2                                             |
+| `/ask` RAG, Pagefind, CommandPalette           | Phase 5 — needs DB first                                    |
+| Garden graph, `/writing/garden`                | Phase 4                                                     |
+| Guestbook, `/shelf`, `/now`, `/uses`           | Phase 4 — needs DB                                          |
+| Tests (Jest, Playwright)                       | Phase 6                                                     |
+
+See `PLANS.md` for priority order and full status table.
 
 ### Tailwind 4 — CSS-first tokens
 
