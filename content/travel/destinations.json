@@ -1,0 +1,116 @@
+[
+  {
+    "slug": "tokyo",
+    "name": "Tokyo",
+    "country": "Japan",
+    "continent": "Asia",
+    "coordinates": [139.6917, 35.6895],
+    "status": "visited",
+    "visitedDates": ["2023-03"],
+    "coverImage": "/images/travel/tokyo.jpg",
+    "recommendations": [
+      { "name": "Kissa Tanto", "type": "food", "note": "Best ramen I've had, ever." },
+      { "name": "teamLab Planets", "type": "see", "note": "Digital art meets sensory overload." }
+    ]
+  },
+  {
+    "slug": "kyoto",
+    "name": "Kyoto",
+    "country": "Japan",
+    "continent": "Asia",
+    "coordinates": [135.7681, 35.0116],
+    "status": "visited",
+    "visitedDates": ["2023-03"],
+    "coverImage": "/images/travel/kyoto.jpg",
+    "recommendations": [
+      { "name": "Fushimi Inari at 5am", "type": "see", "note": "Before the crowds." },
+      { "name": "Nishiki Market", "type": "do", "note": "The kitchen of Kyoto." }
+    ]
+  },
+  {
+    "slug": "lisbon",
+    "name": "Lisbon",
+    "country": "Portugal",
+    "continent": "Europe",
+    "coordinates": [-9.1393, 38.7223],
+    "status": "visited",
+    "visitedDates": ["2022-09"],
+    "coverImage": "/images/travel/lisbon.jpg",
+    "recommendations": [
+      { "name": "Time Out Market", "type": "food", "note": "Overwhelming in the best way." },
+      { "name": "Tram 28", "type": "do", "note": "Touristy but worth it for the hills." }
+    ]
+  },
+  {
+    "slug": "oaxaca",
+    "name": "Oaxaca",
+    "country": "Mexico",
+    "continent": "North America",
+    "coordinates": [-96.7269, 17.0732],
+    "status": "visited",
+    "visitedDates": ["2023-11"],
+    "coverImage": "/images/travel/oaxaca.jpg",
+    "recommendations": [
+      { "name": "El Destilado", "type": "food", "note": "Mezcal and tasting menu." },
+      { "name": "Monte Albán", "type": "see", "note": "Zapotec ruins at golden hour." }
+    ]
+  },
+  {
+    "slug": "new-york",
+    "name": "New York",
+    "country": "USA",
+    "continent": "North America",
+    "coordinates": [-74.006, 40.7128],
+    "status": "visited",
+    "visitedDates": ["2021-06", "2022-04", "2023-08"],
+    "coverImage": "/images/travel/new-york.jpg",
+    "recommendations": [
+      { "name": "Di Fara Pizza", "type": "food", "note": "Worth the wait and the schlep." },
+      {
+        "name": "The Cloisters",
+        "type": "see",
+        "note": "Medieval art in a medieval building in upper Manhattan."
+      }
+    ]
+  },
+  {
+    "slug": "patagonia",
+    "name": "Patagonia",
+    "country": "Argentina / Chile",
+    "continent": "South America",
+    "coordinates": [-72.9333, -50.95],
+    "status": "wishlist"
+  },
+  {
+    "slug": "marrakech",
+    "name": "Marrakech",
+    "country": "Morocco",
+    "continent": "Africa",
+    "coordinates": [-7.9811, 31.6295],
+    "status": "wishlist"
+  },
+  {
+    "slug": "taipei",
+    "name": "Taipei",
+    "country": "Taiwan",
+    "continent": "Asia",
+    "coordinates": [121.5654, 25.0329],
+    "status": "wishlist"
+  },
+  {
+    "slug": "reykjavik",
+    "name": "Reykjavík",
+    "country": "Iceland",
+    "continent": "Europe",
+    "coordinates": [-21.9426, 64.1355],
+    "status": "wishlist"
+  },
+  {
+    "slug": "cape-town",
+    "name": "Cape Town",
+    "country": "South Africa",
+    "continent": "Africa",
+    "coordinates": [18.4241, -33.9249],
+    "status": "wishlist"
+  }
+]

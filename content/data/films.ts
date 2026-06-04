@@ -1,0 +1,55 @@
+import type { Film } from '@/types'
+
+export const films: Film[] = [
+  {
+    title: 'Blade Runner 2049',
+    director: 'Denis Villeneuve',
+    year: 2017,
+    status: 'watched',
+    rating: 5,
+    note: 'Perfect balance of visual poetry and philosophical depth.',
+    dateWatched: '2022-11',
+  },
+  {
+    title: 'Annihilation',
+    director: 'Alex Garland',
+    year: 2018,
+    status: 'watched',
+    rating: 5,
+    note: 'Haunting. The kind of film that stays with you for weeks.',
+    dateWatched: '2023-03',
+  },
+  {
+    title: 'Mad Max: Fury Road',
+    director: 'George Miller',
+    year: 2015,
+    status: 'watched',
+    rating: 5,
+    note: 'The best action film ever made. Pure cinema.',
+    dateWatched: '2023-06',
+  },
+  {
+    title: 'Past Lives',
+    director: 'Celine Song',
+    year: 2023,
+    status: 'watched',
+    rating: 5,
+    note: 'Quiet and devastating. The last scene is perfect.',
+    dateWatched: '2023-07',
+  },
+  {
+    title: 'Everything Everywhere All at Once',
+    director: 'Daniel Kwan, Daniel Scheinert',
+    year: 2022,
+    status: 'watched',
+    rating: 4,
+    note: 'Exhausting and joyful in equal measure.',
+    dateWatched: '2022-05',
+  },
+  {
+    title: 'The Zone of Interest',
+    director: 'Jonathan Glazer',
+    year: 2023,
+    status: 'want',
+  },
+]
