@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import { Providers } from '@/components/providers'
+import { Providers } from '@/components/layout/Providers'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { EasterEggs } from '@/components/easter-eggs/EasterEggs'

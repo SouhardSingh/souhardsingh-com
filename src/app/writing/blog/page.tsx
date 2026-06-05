@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { CategoryFilter } from '@/components/writing/CategoryFilter'
 import { PostCard } from '@/components/writing/PostCard'
-import { getAllPosts } from '@/lib/mdx'
+import { getAllPosts } from '@/lib/content/mdx'
 import type { PostCategory } from '@/types'
 
 export const metadata: Metadata = {

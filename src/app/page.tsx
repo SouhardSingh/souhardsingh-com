@@ -4,7 +4,7 @@ import { Hero } from '@/components/home/Hero'
 import { ActivityFeed } from '@/components/home/ActivityFeed'
 import { SelectedWork } from '@/components/home/SelectedWork'
 import { RecentPosts } from '@/components/home/RecentPosts'
-import { getAllPosts } from '@/lib/mdx'
+import { getAllPosts } from '@/lib/content/mdx'
 import { featuredProjects } from '@content/data/projects'
 
 export const metadata: Metadata = {

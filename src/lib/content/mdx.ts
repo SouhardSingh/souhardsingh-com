@@ -11,11 +11,13 @@ import { unified } from 'unified'
 import { visit } from 'unist-util-visit'
 import GithubSlugger from 'github-slugger'
 import type { Heading } from 'mdast'
-import type { Post } from '@/types'
+import type { Post, TocHeading } from '@/types'
 
 const CONTENT_ROOT = path.join(process.cwd(), 'content')
 
 export type ContentType = 'blog' | 'garden' | 'building' | 'architecture' | 'travel/journal'
+
+export { type TocHeading }
 
 export function getAllPosts(type: ContentType): Post[] {
   const dir = path.join(CONTENT_ROOT, type)
@@ -36,12 +38,6 @@ export function getAllPosts(type: ContentType): Post[] {
     })
     .filter((p) => p.published)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-}
-
-export interface TocHeading {
-  id: string
-  text: string
-  level: number
 }
 
 function extractHeadings(content: string): TocHeading[] {

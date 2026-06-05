@@ -1,78 +1,68 @@
 /**
  * Provider-agnostic blob storage.
  *
- * Set STORAGE_PROVIDER in .env.local to switch backends:
- *   'r2'    — Cloudflare R2  (needs NEXT_PUBLIC_STORAGE_BASE_URL + R2 API keys for uploads)
- *   'local' — /public/uploads/ on disk, served as static files (default, zero deps)
- *   'blob'  — Vercel Blob   (install @vercel/blob + set BLOB_READ_WRITE_TOKEN, then wire below)
+ * Set STORAGE_PROVIDER in .env.local to choose a backend:
+ *   's3'          — any S3-compatible service: Cloudflare R2, AWS S3, Backblaze B2, MinIO
+ *   'vercel-blob' — Vercel Blob (install @vercel/blob + set BLOB_READ_WRITE_TOKEN)
  *
- * Consumer code only ever calls `storage.url(key)` (read) or `storage.upload(...)` (write).
- * Swapping providers is a one-line env-var change; no application code changes needed.
+ * Required env vars (all providers):
+ *   NEXT_PUBLIC_STORAGE_BASE_URL  — public CDN/bucket URL for reads (no trailing slash)
+ *
+ * Additional vars for 's3':
+ *   STORAGE_ENDPOINT        — S3-compatible endpoint (e.g. https://<account>.r2.cloudflarestorage.com)
+ *   STORAGE_ACCESS_KEY_ID   — access key ID
+ *   STORAGE_SECRET_ACCESS_KEY — secret access key
+ *   STORAGE_BUCKET          — bucket name
+ *
+ * Consumer code only ever calls `storage.url(key)` or `storage.upload(...)`.
+ * Switching providers is a one-line env-var change — no application code changes needed.
  */
 
 export interface StorageProvider {
   /** Resolve a stored key to its public URL — synchronous, no network call. */
   url(key: string): string
-  /** Upload a file and return its public URL. Requires server-side env vars. */
+  /** Upload a file and return its public URL. Server-side only. */
   upload(key: string, body: Buffer, contentType: string): Promise<string>
 }
 
-// ── R2 provider ───────────────────────────────────────────────────────────────
-// Public reads go straight to the CDN — no SDK needed.
-// Uploads: implement /api/admin/upload with @aws-sdk/client-s3 pointed at the R2 endpoint.
-function r2Provider(): StorageProvider {
+// ── S3-compatible (Cloudflare R2, AWS S3, Backblaze B2, MinIO) ───────────────
+// Public reads go directly via NEXT_PUBLIC_STORAGE_BASE_URL — no SDK needed.
+// Uploads: implement /api/admin/upload with @aws-sdk/client-s3.
+// See docs/plan/07-infrastructure.md §7 for the upload route.
+function s3Provider(): StorageProvider {
   const base = (process.env.NEXT_PUBLIC_STORAGE_BASE_URL ?? '').replace(/\/$/, '')
   return {
     url(key: string) {
       if (!key) return ''
       if (key.startsWith('http://') || key.startsWith('https://')) return key
-      if (key.startsWith('/')) return key // local /public/ path — pass through
       return `${base}/${key}`
     },
     async upload() {
       throw new Error(
-        'R2 upload not yet wired. Add @aws-sdk/client-s3 and implement /api/admin/upload. See docs/plan/07-infrastructure.md §7.'
+        'S3 upload not yet wired. Add @aws-sdk/client-s3 and implement /api/admin/upload. See docs/plan/07-infrastructure.md §7.'
       )
     },
   }
 }
 
-// ── Local filesystem provider (dev / self-hosted) ─────────────────────────────
-// Files land in /public/uploads/<key> and are served as static assets.
-// Upload only works in Node.js runtime (not edge). Fine for local dev and self-hosted.
-function localProvider(): StorageProvider {
+// ── Vercel Blob (stub) ────────────────────────────────────────────────────────
+// Install @vercel/blob, then replace this stub:
+//   import { put } from '@vercel/blob'
+//   upload: async (key, body, contentType) => {
+//     const { url } = await put(key, body, { access: 'public', contentType })
+//     return url
+//   }
+function vercelBlobProvider(): StorageProvider {
+  const base = (process.env.NEXT_PUBLIC_STORAGE_BASE_URL ?? '').replace(/\/$/, '')
   return {
     url(key: string) {
       if (!key) return ''
       if (key.startsWith('http://') || key.startsWith('https://')) return key
-      if (key.startsWith('/')) return key
-      return `/uploads/${key}`
-    },
-    async upload(key: string, body: Buffer) {
-      const { writeFile, mkdir } = await import('fs/promises')
-      const { join, dirname } = await import('path')
-      const dest = join(process.cwd(), 'public', 'uploads', key)
-      await mkdir(dirname(dest), { recursive: true })
-      await writeFile(dest, body)
-      return `/uploads/${key}`
-    },
-  }
-}
-
-// ── Vercel Blob provider (stub) ───────────────────────────────────────────────
-// Install @vercel/blob, then replace this stub with:
-//   import { put } from '@vercel/blob'
-//   upload: async (key, body, contentType) => { const { url } = await put(key, body, { access: 'public', contentType }); return url }
-function blobProvider(): StorageProvider {
-  return {
-    url(key: string) {
-      // Vercel Blob URLs are returned by put() and stored alongside the key.
-      // Until implemented, fall back to treating the key as a path.
-      return key.startsWith('http') ? key : `/uploads/${key}`
+      return base ? `${base}/${key}` : key
     },
     async upload() {
       throw new Error(
-        'Vercel Blob upload not yet wired. Install @vercel/blob and implement blobProvider.upload().'
+        'Vercel Blob upload not yet wired. Install @vercel/blob and implement vercelBlobProvider.upload().'
       )
     },
   }
@@ -80,17 +70,16 @@ function blobProvider(): StorageProvider {
 
 // ── Factory ───────────────────────────────────────────────────────────────────
 function createProvider(): StorageProvider {
-  const p = process.env.STORAGE_PROVIDER ?? 'local'
-  if (p === 'r2') return r2Provider()
-  if (p === 'blob') return blobProvider()
-  return localProvider()
+  const p = process.env.STORAGE_PROVIDER ?? 's3'
+  if (p === 'vercel-blob') return vercelBlobProvider()
+  return s3Provider()
 }
 
 export const storage = createProvider()
 
 /**
- * Canonical key paths — use these everywhere so renaming a bucket doesn't
- * require a search-replace across the codebase.
+ * Canonical key paths — use these everywhere so renaming a bucket prefix
+ * doesn't require a search-replace across the codebase.
  */
 export const storageKey = {
   blogImage: (slug: string, file: string) => `blog/${slug}/${file}`,

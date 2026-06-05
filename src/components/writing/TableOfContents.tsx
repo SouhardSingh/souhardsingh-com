@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
-import type { TocHeading } from '@/lib/mdx'
+import type { TocHeading } from '@/types'
 
 interface Props {
   headings: TocHeading[]
