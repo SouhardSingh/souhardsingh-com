@@ -1,4 +1,5 @@
 import type { MDXComponents } from 'mdx/types'
+import { LandsatName } from '@/components/landsat/LandsatName'
 import { MdxImage } from './MdxImage'
 
 export const mdxComponents: MDXComponents = {
@@ -77,4 +78,5 @@ export const mdxComponents: MDXComponents = {
       {children}
     </aside>
   ),
+  LandsatName,
 }

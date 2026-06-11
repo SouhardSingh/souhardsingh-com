@@ -11,6 +11,11 @@ const CursorTrail = dynamic(
   { ssr: false }
 )
 
+const LandsatName = dynamic(
+  () => import('@/components/landsat/LandsatName').then((m) => ({ default: m.LandsatName })),
+  { ssr: false }
+)
+
 const ORBS = [
   { top: '15%', left: '10%', size: 420 },
   { top: '55%', left: '68%', size: 320 },
@@ -53,10 +58,19 @@ export function Hero() {
         </motion.p>
 
         <motion.div
+          initial={reduced ? {} : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.18 }}
+          className="mt-6"
+        >
+          <LandsatName name="SOUHARD" mode="static" />
+        </motion.div>
+
+        <motion.div
           className="mt-8 flex flex-wrap gap-3"
           initial={reduced ? {} : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.28 }}
         >
           <Link
             href="/work/projects"

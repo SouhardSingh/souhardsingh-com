@@ -86,4 +86,6 @@ export const storageKey = {
   blogCover: (slug: string, ext = 'jpg') => `blog/covers/${slug}.${ext}`,
   travelPhoto: (slug: string, file: string) => `travel/${slug}/${file}`,
   avatar: (ext = 'jpg') => `about/avatar.${ext}`,
+  landsatLetter: (char: string, index: number) =>
+    `landsat/letters/${char.toUpperCase()}/${index}.jpg`,
 } as const
