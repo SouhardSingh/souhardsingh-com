@@ -1,3 +1,4 @@
+import { GlobeIcon, HeartIcon, MapIcon } from 'lucide-react'
 import type { Destination } from '@/types'
 
 interface Props {
@@ -10,23 +11,23 @@ export function TravelStats({ destinations }: Props) {
   const wishlist = destinations.filter((d) => d.status === 'wishlist').length
 
   const stats = [
-    { value: visited.length, label: 'countries visited' },
-    { value: continents, label: 'continents' },
-    { value: wishlist, label: 'on the list' },
+    { value: visited.length, label: 'countries', Icon: GlobeIcon },
+    { value: continents, label: 'continents', Icon: MapIcon },
+    { value: wishlist, label: 'on the list', Icon: HeartIcon },
   ]
 
   return (
-    <div className="border-border mx-auto my-10 max-w-5xl divide-x border-y px-4 sm:px-6">
-      <div className="divide-border grid grid-cols-3 divide-x">
-        {stats.map((s) => (
-          <div key={s.label} className="px-4 py-6 text-center sm:px-8">
-            <p className="font-display text-text text-3xl font-bold sm:text-4xl">{s.value}</p>
-            <p className="text-text-muted mt-1 text-xs font-medium tracking-wide sm:text-sm">
-              {s.label}
-            </p>
-          </div>
-        ))}
-      </div>
+    <div className="mx-auto mt-6 flex max-w-5xl flex-wrap gap-2.5 px-4 sm:px-6">
+      {stats.map(({ value, label, Icon }) => (
+        <div
+          key={label}
+          className="border-border bg-surface-2 flex items-center gap-2 rounded-full border px-4 py-2"
+        >
+          <Icon size={14} className="text-accent shrink-0" />
+          <span className="text-text text-sm font-semibold">{value}</span>
+          <span className="text-text-muted text-xs">{label}</span>
+        </div>
+      ))}
     </div>
   )
 }

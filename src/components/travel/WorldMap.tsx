@@ -76,7 +76,7 @@ export function WorldMap({ destinations }: Props) {
       <ComposableMap
         projectionConfig={{ scale: 140 }}
         style={{ width: '100%', height: 'auto' }}
-        height={400}
+        height={460}
       >
         <ZoomableGroup zoom={zoom} center={center} minZoom={1} maxZoom={6}>
           <Geographies geography={GEO_URL}>

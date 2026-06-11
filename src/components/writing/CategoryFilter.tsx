@@ -1,14 +1,14 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { cn } from '@/lib/utils'
 
 const CATEGORIES = [
-  { value: '', label: 'All' },
-  { value: 'engineering', label: 'Engineering' },
-  { value: 'travel', label: 'Travel' },
-  { value: 'life', label: 'Life' },
-  { value: 'culture', label: 'Culture' },
+  { value: '', label: 'all' },
+  { value: 'engineering', label: 'engineering' },
+  { value: 'travel', label: 'travel' },
+  { value: 'life', label: 'life' },
+  { value: 'culture', label: 'culture' },
 ]
 
 export function CategoryFilter() {
@@ -27,14 +27,22 @@ export function CategoryFilter() {
   }
 
   return (
-    <Tabs value={current} onValueChange={handleChange}>
-      <TabsList variant="line" className="h-auto flex-wrap gap-1">
-        {CATEGORIES.map((cat) => (
-          <TabsTrigger key={cat.value} value={cat.value} className="min-h-[44px] px-4">
-            {cat.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-    </Tabs>
+    <div className="flex flex-wrap gap-2" role="group" aria-label="Filter posts by category">
+      {CATEGORIES.map((cat) => (
+        <button
+          key={cat.value}
+          onClick={() => handleChange(cat.value)}
+          aria-pressed={current === cat.value}
+          className={cn(
+            'min-h-[44px] rounded-full border px-4 py-2 text-sm font-medium transition-colors',
+            current === cat.value
+              ? 'bg-accent text-bg border-accent'
+              : 'border-border text-text-muted hover:border-text-muted hover:text-text'
+          )}
+        >
+          {cat.label}
+        </button>
+      ))}
+    </div>
   )
 }

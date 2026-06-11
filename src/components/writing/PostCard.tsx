@@ -13,9 +13,7 @@ export function PostCard({ post }: Props) {
       className="group border-border hover:bg-surface block rounded-xl border p-5 transition-colors sm:p-6"
     >
       <div className="flex flex-wrap items-center gap-2 text-xs">
-        <Badge variant="secondary" className="capitalize">
-          {post.category}
-        </Badge>
+        <Badge variant="secondary">{post.category}</Badge>
         <span className="text-text-muted">
           {new Date(post.date).toLocaleDateString('en-US', {
             month: 'long',

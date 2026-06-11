@@ -17,41 +17,30 @@ const NAV_LINKS = [
 
 function SSLogo() {
   return (
-    <Link href="/" aria-label="Souhard Singh — home" className="group flex items-center gap-2">
-      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
-        {/* Outlined container — adapts to dark/light via CSS vars */}
+    <Link href="/" aria-label="Souhard Singh — home" className="group flex items-center gap-2.5">
+      {/* Custom S mark — bezier path, not a font glyph */}
+      <svg
+        width="30"
+        height="30"
+        viewBox="0 0 32 32"
+        fill="none"
+        aria-hidden="true"
+        className="shrink-0 transition-opacity group-hover:opacity-75"
+      >
         <rect
-          x="1"
-          y="1"
           width="32"
           height="32"
           rx="7"
           fill="hsl(var(--surface-2))"
-          stroke="hsl(var(--accent))"
-          strokeWidth="1.5"
+          stroke="hsl(var(--border))"
+          strokeWidth="1"
         />
-        {/* First S in accent */}
-        <text
-          x="10"
-          y="23"
-          fill="hsl(var(--accent))"
-          fontFamily="Georgia, serif"
-          fontWeight="700"
-          fontSize="16"
-        >
-          S
-        </text>
-        {/* Second S in main text color */}
-        <text
-          x="18.5"
-          y="23"
-          fill="hsl(var(--text))"
-          fontFamily="Georgia, serif"
-          fontWeight="700"
-          fontSize="16"
-        >
-          S
-        </text>
+        <path
+          d="M21,9 C21,6 11,6 11,13 C11,18 21,18 21,22 C21,27 11,27 11,24"
+          stroke="hsl(var(--accent))"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
       </svg>
       <span className="font-display text-text hidden text-sm font-semibold tracking-wide sm:inline">
         Souhard Singh

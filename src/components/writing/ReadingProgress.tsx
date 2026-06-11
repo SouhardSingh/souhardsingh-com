@@ -12,9 +12,23 @@ export function ReadingProgress() {
     const update = () => {
       const { top, height } = article.getBoundingClientRect()
       const windowH = window.innerHeight
-      const scrolled = Math.max(0, windowH - top)
-      const pct = Math.min(100, (scrolled / (height + windowH)) * 100)
-      setProgress(pct)
+
+      // Absolute positions of the article in the document
+      const absTop = top + window.scrollY
+      const absBottom = absTop + height
+
+      // 0% when article top reaches viewport top; 100% when article bottom reaches viewport bottom
+      const start = absTop
+      const end = absBottom - windowH
+
+      if (end <= start) {
+        // Article shorter than viewport — always fully visible
+        setProgress(100)
+        return
+      }
+
+      const raw = ((window.scrollY - start) / (end - start)) * 100
+      setProgress(Math.min(100, Math.max(0, raw)))
     }
 
     window.addEventListener('scroll', update, { passive: true })
