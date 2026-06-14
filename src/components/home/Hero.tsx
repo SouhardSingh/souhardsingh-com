@@ -26,7 +26,7 @@ export function Hero() {
   const reduced = useReducedMotion()
 
   return (
-    <section className="relative flex min-h-[calc(68dvh-3.5rem)] items-center overflow-hidden px-4 sm:px-6">
+    <section className="relative flex min-h-[calc(68dvh-3.5rem)] flex-col overflow-hidden">
       {!reduced &&
         ORBS.map((orb, i) => (
           <motion.div
@@ -38,54 +38,72 @@ export function Hero() {
           />
         ))}
 
-      <div className="relative z-10 mx-auto w-full max-w-5xl">
-        <motion.h1
-          className="font-display text-text text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
-          initial={reduced ? {} : { opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Souhard Singh
-        </motion.h1>
-
-        <motion.p
-          className="text-text-muted mt-5 max-w-lg text-lg sm:text-xl"
-          initial={reduced ? {} : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          Software engineer, writer, and traveler. Building things on the internet.
-        </motion.p>
-
-        <motion.div
-          initial={reduced ? {} : { opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.18 }}
-          className="mt-6"
-        >
-          <LandsatName name="SOUHARD" mode="static" />
-        </motion.div>
-
-        <motion.div
-          className="mt-8 flex flex-wrap gap-3"
-          initial={reduced ? {} : { opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.28 }}
-        >
-          <Link
-            href="/work/projects"
-            className={cn(buttonVariants({ size: 'lg' }), 'min-h-[44px] px-6')}
+      {/* Text content */}
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 items-center px-4 py-8 sm:px-6">
+        <div>
+          <motion.h1
+            className="font-display text-text text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
+            initial={reduced ? {} : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            See my work
-          </Link>
-          <Link
-            href="/writing/blog"
-            className={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'min-h-[44px] px-6')}
+            Souhard Singh
+          </motion.h1>
+
+          <motion.p
+            className="text-text-muted mt-5 max-w-lg text-lg sm:text-xl"
+            initial={reduced ? {} : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Read
-          </Link>
-        </motion.div>
+            Software engineer, writer, and traveler. Building things on the internet.
+          </motion.p>
+
+          <motion.div
+            className="mt-8 flex flex-wrap gap-3"
+            initial={reduced ? {} : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.18 }}
+          >
+            <Link
+              href="/work/projects"
+              className={cn(buttonVariants({ size: 'lg' }), 'min-h-[44px] px-6')}
+            >
+              See my work
+            </Link>
+            <Link
+              href="/writing/blog"
+              className={cn(
+                buttonVariants({ variant: 'outline', size: 'lg' }),
+                'min-h-[44px] px-6'
+              )}
+            >
+              Read
+            </Link>
+          </motion.div>
+        </div>
       </div>
+
+      {/* Full-width Landsat banner */}
+      <motion.div
+        className="relative z-10 w-full px-2 pb-4 sm:px-3 sm:pb-5"
+        initial={reduced ? {} : { opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.32 }}
+      >
+        <LandsatName name="SOUHARD" mode="static" variant="banner" />
+        <p className="text-text-muted mt-1.5 text-right text-[10px]">
+          Letters via{' '}
+          <a
+            href="https://landsat.gsfc.nasa.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-text underline underline-offset-2"
+          >
+            Landsat / NASA
+          </a>
+        </p>
+      </motion.div>
 
       <CursorTrail />
     </section>
