@@ -6,24 +6,20 @@ import { SelectedWork } from '@/components/home/SelectedWork'
 import { RecentPosts } from '@/components/home/RecentPosts'
 import { getAllPosts } from '@/lib/content/mdx'
 import { featuredProjects } from '@content/data/projects'
+import { siteConfig } from '@/lib/site'
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://souhardsingh.com' },
+  alternates: { canonical: '/' },
 }
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: 'Souhard Singh',
-  url: 'https://souhardsingh.com',
-  description:
-    'Software engineer focused on backend systems and distributed infrastructure. Writing about engineering, travel, and the things in between.',
+  name: siteConfig.author.name,
+  url: siteConfig.url,
+  description: siteConfig.description,
   jobTitle: 'Software Engineer',
-  sameAs: [
-    'https://github.com/souhardsingh',
-    'https://twitter.com/souhardsingh',
-    'https://linkedin.com/in/souhardsingh',
-  ],
+  sameAs: [siteConfig.social.github, siteConfig.social.twitter, siteConfig.social.linkedin],
 }
 
 export default function HomePage() {

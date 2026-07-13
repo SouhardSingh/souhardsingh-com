@@ -27,43 +27,53 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-[calc(68dvh-3.5rem)] flex-col overflow-hidden">
-      {!reduced &&
-        ORBS.map((orb, i) => (
-          <motion.div
-            key={i}
-            className="bg-accent/20 pointer-events-none absolute rounded-full blur-3xl"
-            style={{ width: orb.size, height: orb.size, top: orb.top, left: orb.left }}
-            animate={{ scale: [1, 1.18, 1], opacity: [0.25, 0.45, 0.25] }}
-            transition={{ duration: 7, delay: i * 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        ))}
+      {/* Orbs always render (mounting them conditionally on `reduced` would desync SSR markup);
+          reduced motion just holds them at their resting scale/opacity. */}
+      {ORBS.map((orb, i) => (
+        <motion.div
+          key={i}
+          className="bg-accent/20 pointer-events-none absolute rounded-full blur-3xl"
+          style={{ width: orb.size, height: orb.size, top: orb.top, left: orb.left }}
+          initial={{ scale: 1, opacity: 0.25 }}
+          animate={
+            reduced
+              ? { scale: 1, opacity: 0.25 }
+              : { scale: [1, 1.18, 1], opacity: [0.25, 0.45, 0.25] }
+          }
+          transition={
+            reduced
+              ? { duration: 0 }
+              : { duration: 7, delay: i * 1.5, repeat: Infinity, ease: 'easeInOut' }
+          }
+        />
+      ))}
 
       {/* Text content */}
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 items-center px-4 py-8 sm:px-6">
         <div>
           <motion.h1
             className="font-display text-text text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
-            initial={reduced ? {} : { opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: reduced ? 0 : 0.5 }}
           >
             Souhard Singh
           </motion.h1>
 
           <motion.p
             className="text-text-muted mt-5 max-w-lg text-lg sm:text-xl"
-            initial={reduced ? {} : { opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.1 }}
           >
             Software engineer, writer, and traveler. Building things on the internet.
           </motion.p>
 
           <motion.div
             className="mt-8 flex flex-wrap gap-3"
-            initial={reduced ? {} : { opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.18 }}
+            transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.18 }}
           >
             <Link
               href="/work/projects"
@@ -87,9 +97,9 @@ export function Hero() {
       {/* Full-width Landsat banner */}
       <motion.div
         className="relative z-10 w-full px-2 pb-4 sm:px-3 sm:pb-5"
-        initial={reduced ? {} : { opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.32 }}
+        transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.32 }}
       >
         <LandsatName name="SOUHARD" mode="static" variant="banner" />
         <p className="text-text-muted mt-1.5 text-right text-[10px]">

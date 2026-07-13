@@ -12,13 +12,13 @@ const NAV_LINKS = [
   { href: '/work', label: 'Work' },
   { href: '/writing', label: 'Writing' },
   { href: '/travel', label: 'Travel' },
+  { href: '/play', label: 'Play' },
   { href: '/ask', label: '/ask', accent: true },
 ]
 
 function SSLogo() {
   return (
     <Link href="/" aria-label="Souhard Singh — home" className="group flex items-center gap-2.5">
-      {/* Custom S mark — bezier path, not a font glyph */}
       <svg
         width="30"
         height="30"
@@ -36,9 +36,79 @@ function SSLogo() {
           strokeWidth="1"
         />
         <path
-          d="M21,9 C21,6 11,6 11,13 C11,18 21,18 21,22 C21,27 11,27 11,24"
-          stroke="hsl(var(--accent))"
-          strokeWidth="2.4"
+          d="M24,6 C29,10 28,19 19,25 C15,27 12,25 11,22 C9,19 10,14 13,11 C16,8 20,7 24,6 Z"
+          fill="hsl(var(--accent))"
+        />
+        <line
+          x1="24"
+          y1="6"
+          x2="11"
+          y2="25"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        <line
+          x1="22"
+          y1="9"
+          x2="26"
+          y2="12"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="1"
+          strokeLinecap="round"
+        />
+        <line
+          x1="19"
+          y1="13"
+          x2="24"
+          y2="16"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="1"
+          strokeLinecap="round"
+        />
+        <line
+          x1="16"
+          y1="17"
+          x2="20"
+          y2="20"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="1"
+          strokeLinecap="round"
+        />
+        <line
+          x1="13"
+          y1="21"
+          x2="16"
+          y2="23"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <line
+          x1="22"
+          y1="9"
+          x2="19"
+          y2="7"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <line
+          x1="19"
+          y1="13"
+          x2="16"
+          y2="11"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <line
+          x1="16"
+          y1="17"
+          x2="14"
+          y2="16"
+          stroke="hsl(var(--surface-2))"
+          strokeWidth="0.9"
           strokeLinecap="round"
         />
       </svg>

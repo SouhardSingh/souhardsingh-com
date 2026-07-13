@@ -55,9 +55,13 @@ function LetterTile({
           ? 'h-24 min-w-0 flex-1 rounded-sm sm:h-32 md:h-40 lg:h-48'
           : 'h-[72px] w-[58px] shrink-0 rounded-lg sm:h-[88px] sm:w-[70px]'
       )}
-      initial={reduced ? {} : { opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: index * 0.06, ease: 'easeOut' }}
+      transition={{
+        duration: reduced ? 0 : 0.35,
+        delay: reduced ? 0 : index * 0.06,
+        ease: 'easeOut',
+      }}
       whileHover={reduced ? {} : { scale: isBanner ? 1.03 : 1.06 }}
     >
       {hasImage ? (

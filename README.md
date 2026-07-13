@@ -10,6 +10,16 @@ Personal site for Souhard Singh — software engineer, writer, traveler.
 - [Framer Motion](https://www.framer.com/motion/) — animations
 - [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote) — MDX content pipeline
 - [next-themes](https://github.com/pacocoursey/next-themes) — dark mode
+- [cobe](https://github.com/shuding/cobe) — WebGL globe on `/travel`
+- [react-simple-maps](https://www.react-simple-maps.io) — flat guess map for the `/play` geo-guesser
+
+## Features
+
+- **`/travel`** — interactive 3D globe (drag to rotate, tap a pin) with visited/wishlist markers.
+- **`/play`** — two games: "Where on Earth" satellite geo-guesser and "Comet Run" arcade dodger
+  (also hidden behind the Konami code on any page).
+- **SEO** — dynamic OG images (`/og`), RSS feed (`/feed.xml`), sitemap, robots, PWA manifest, and
+  per-page metadata. All URLs/identity come from `src/lib/site.ts`.
 
 ## Development
 
@@ -37,15 +47,21 @@ content/
   garden/         ← /writing/garden/[slug]  (wiki-links supported: [[slug]])
   travel/
     destinations.json
+  play/
+    geo-rounds.json  ← geo-guesser rounds; images live in public/play/rounds/{id}.jpg
   data/
     projects.ts   experience.ts   books.ts   films.ts
 ```
 
 ## Environment Variables
 
-Copy `.env.example` to `.env.local` (required for `/ask` and guestbook — not yet implemented):
+Copy `.env.example` to `.env.local`. Everything below is optional for local dev; the site runs without it.
 
 ```
+# Canonical site URL — set in preview/staging so canonicals, OG images,
+# the sitemap, and the RSS feed point at the right origin (defaults to prod).
+NEXT_PUBLIC_SITE_URL=
+
 # /ask AI chatbot
 DATABASE_URL=
 OLLAMA_BASE_URL=

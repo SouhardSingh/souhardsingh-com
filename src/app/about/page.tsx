@@ -4,6 +4,7 @@ import { ExperienceItem } from '@/components/work/ExperienceItem'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { experience } from '@content/data/experience'
+import { ogImageUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'About',
     description: 'Software engineer, writer, and traveler.',
-    images: ['/og?title=About&type=page'],
+    images: [ogImageUrl('About', 'page', 'Software engineer, writer, and traveler.')],
   },
   twitter: { card: 'summary_large_image' },
 }

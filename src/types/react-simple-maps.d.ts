@@ -2,6 +2,7 @@ declare module 'react-simple-maps' {
   import type { ReactNode, SVGProps, MouseEvent } from 'react'
 
   interface ComposableMapProps {
+    projection?: string
     projectionConfig?: Record<string, unknown>
     width?: number
     height?: number
@@ -9,6 +10,12 @@ declare module 'react-simple-maps' {
     children?: ReactNode
   }
   export function ComposableMap(props: ComposableMapProps): JSX.Element
+
+  interface LineProps extends SVGProps<SVGPathElement> {
+    from: [number, number]
+    to: [number, number]
+  }
+  export function Line(props: LineProps): JSX.Element
 
   interface ZoomableGroupProps {
     zoom?: number

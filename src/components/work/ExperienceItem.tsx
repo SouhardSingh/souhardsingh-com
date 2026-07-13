@@ -16,10 +16,10 @@ export function ExperienceItem({ item, index }: Props) {
   return (
     <motion.div
       className="relative pl-8"
-      initial={reduced ? {} : { opacity: 0, x: -12 }}
+      initial={{ opacity: 0, x: -12 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.4, delay: index * 0.08 }}
+      transition={{ duration: reduced ? 0 : 0.4, delay: reduced ? 0 : index * 0.08 }}
     >
       {/* Timeline dot */}
       <span className="bg-accent absolute top-1.5 left-0 size-3 rounded-full" />

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "sahara",
+    "image": "/play/rounds/sahara.jpg",
+    "answer": { "lat": 23.4162, "lng": 25.6628, "name": "Sahara Desert", "country": "Libya" },
+    "hint": "Endless wind-carved dunes and dry riverbeds — the largest hot desert on Earth."
+  },
+  {
+    "id": "venice",
+    "image": "/play/rounds/venice.jpg",
+    "answer": { "lat": 45.4408, "lng": 12.3155, "name": "Venice", "country": "Italy" },
+    "hint": "A lagoon city stitched together by canals instead of streets."
+  },
+  {
+    "id": "grand-canyon",
+    "image": "/play/rounds/grand-canyon.jpg",
+    "answer": { "lat": 36.1069, "lng": -112.1129, "name": "Grand Canyon", "country": "USA" },
+    "hint": "A mile-deep gorge cut by a river through layered red rock."
+  },
+  {
+    "id": "nile-delta",
+    "image": "/play/rounds/nile-delta.jpg",
+    "answer": { "lat": 30.9, "lng": 31.1, "name": "Nile Delta", "country": "Egypt" },
+    "hint": "A green fan of farmland spilling into the sea, ringed by desert."
+  },
+  {
+    "id": "bora-bora",
+    "image": "/play/rounds/bora-bora.jpg",
+    "answer": {
+      "lat": -16.5004,
+      "lng": -151.7415,
+      "name": "Bora Bora",
+      "country": "French Polynesia"
+    },
+    "hint": "A turquoise ring of coral reef around a volcanic island in the South Pacific."
+  },
+  {
+    "id": "himalayas",
+    "image": "/play/rounds/himalayas.jpg",
+    "answer": { "lat": 27.9881, "lng": 86.925, "name": "Mount Everest", "country": "Nepal" },
+    "hint": "Snow-capped peaks and glacier valleys along the roof of the world."
+  }
+]

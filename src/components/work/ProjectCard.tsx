@@ -20,10 +20,10 @@ export function ProjectCard({ project, index }: Props) {
 
   return (
     <motion.div
-      initial={reduced ? {} : { opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.35, delay: index * 0.07 }}
+      transition={{ duration: reduced ? 0 : 0.35, delay: reduced ? 0 : index * 0.07 }}
       whileHover={reduced ? {} : { y: -3 }}
     >
       <Card className="group/card h-full overflow-hidden transition-shadow hover:shadow-lg">

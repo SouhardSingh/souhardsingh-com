@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { TravelStats } from '@/components/travel/TravelStats'
-import { WorldMapClient } from '@/components/travel/WorldMapClient'
+import { GlobeClient } from '@/components/travel/GlobeClient'
 import { DestinationCard } from '@/components/travel/DestinationCard'
 import rawDestinations from '@content/travel/destinations.json'
 import type { Destination } from '@/types'
+import { ogImageUrl } from '@/lib/site'
 
 const destinations = rawDestinations as Destination[]
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Travel',
     description: 'Places visited, places dreamed of.',
-    images: ['/og?title=Travel&type=page'],
+    images: [ogImageUrl('Travel', 'page', 'Places visited, places dreamed of.')],
   },
   twitter: { card: 'summary_large_image' },
 }
@@ -32,10 +33,10 @@ export default function TravelPage() {
         <p className="text-text-muted mt-4 max-w-xl text-lg">Places visited, places dreamed of.</p>
       </div>
 
-      {/* World map */}
+      {/* Interactive globe */}
       <div className="mt-10 px-4 sm:px-6">
         <div className="mx-auto max-w-5xl">
-          <WorldMapClient destinations={destinations} />
+          <GlobeClient destinations={destinations} />
         </div>
       </div>
 

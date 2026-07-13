@@ -21,26 +21,27 @@ pnpm start        # serve production build
 
 ## Stack (actual versions)
 
-| Package                  | Version | Note                                                                              |
-| ------------------------ | ------- | --------------------------------------------------------------------------------- |
-| next                     | 16.2.7  | App Router, Turbopack                                                             |
-| react                    | 19.2.4  |                                                                                   |
-| tailwindcss              | 4.x     | CSS-first config — **no `tailwind.config.ts`**                                    |
-| @base-ui/react           | 1.x     | Used by shadcn base-nova components                                               |
-| framer-motion            | 12.x    |                                                                                   |
-| next-themes              | 0.4.6   | Class-based dark mode                                                             |
-| lucide-react             | 1.17.0  | No brand icons (GitHub/X/LinkedIn are inline SVGs)                                |
-| next-mdx-remote          | 6.x     | MDX rendering via `MDXRemote` (RSC variant from `next-mdx-remote/rsc`)            |
-| gray-matter              | 4.x     | Frontmatter parsing                                                               |
-| reading-time             | 1.x     | Auto-computes `readingTime` in minutes                                            |
-| rehype-pretty-code       | 0.14.x  | Syntax highlighting (github-dark / github-light themes via shiki)                 |
-| github-slugger           | 2.x     | Slug generation — matches `rehype-slug` output exactly, handles duplicates        |
-| react-simple-maps        | 3.x     | SVG world map (client-only, wrapped in `WorldMapClient` for `ssr: false`)         |
-| drizzle-orm              | 0.45.x  | ORM — installed, DB files not yet created (see PLANS.md)                          |
-| @neondatabase/serverless | 1.x     | Neon HTTP driver — installed, not yet wired                                       |
-| drizzle-kit              | 0.31.x  | Dev tool for schema migrations — installed, config not yet created                |
-| eslint                   | 9.x     | Flat config (`eslint.config.mjs`), **not** v10 — v10 breaks `eslint-plugin-react` |
-| prettier                 | 3.x     | With `prettier-plugin-tailwindcss` for class sorting                              |
+| Package                  | Version | Note                                                                                                                                      |
+| ------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| next                     | 16.2.7  | App Router, Turbopack                                                                                                                     |
+| react                    | 19.2.4  |                                                                                                                                           |
+| tailwindcss              | 4.x     | CSS-first config — **no `tailwind.config.ts`**                                                                                            |
+| @base-ui/react           | 1.x     | Used by shadcn base-nova components                                                                                                       |
+| framer-motion            | 12.x    |                                                                                                                                           |
+| next-themes              | 0.4.6   | Class-based dark mode                                                                                                                     |
+| lucide-react             | 1.17.0  | No brand icons (GitHub/X/LinkedIn are inline SVGs)                                                                                        |
+| next-mdx-remote          | 6.x     | MDX rendering via `MDXRemote` (RSC variant from `next-mdx-remote/rsc`)                                                                    |
+| gray-matter              | 4.x     | Frontmatter parsing                                                                                                                       |
+| reading-time             | 1.x     | Auto-computes `readingTime` in minutes                                                                                                    |
+| rehype-pretty-code       | 0.14.x  | Syntax highlighting (github-dark / github-light themes via shiki)                                                                         |
+| github-slugger           | 2.x     | Slug generation — matches `rehype-slug` output exactly, handles duplicates                                                                |
+| cobe                     | 2.0.x   | WebGL dot globe on /travel (~5 KB). v2 has **no** `onRender` — you drive it with your own rAF loop calling `globe.update({ phi, theta })` |
+| react-simple-maps        | 3.x     | SVG world map — now used only by the geo-guesser's `GuessMap` (client-only, `ssr: false`)                                                 |
+| drizzle-orm              | 0.45.x  | ORM — installed, DB files not yet created (see PLANS.md)                                                                                  |
+| @neondatabase/serverless | 1.x     | Neon HTTP driver — installed, not yet wired                                                                                               |
+| drizzle-kit              | 0.31.x  | Dev tool for schema migrations — installed, config not yet created                                                                        |
+| eslint                   | 9.x     | Flat config (`eslint.config.mjs`), **not** v10 — v10 breaks `eslint-plugin-react`                                                         |
+| prettier                 | 3.x     | With `prettier-plugin-tailwindcss` for class sorting                                                                                      |
 
 ## Commit Message Convention
 
@@ -104,18 +105,24 @@ The `prepare` script (`"husky"`) runs automatically on `pnpm install` to activat
 src/
   app/
     globals.css                     ← Tailwind 4 design tokens + dark mode CSS vars
-    layout.tsx                      ← Root layout: fonts, ThemeProvider, Navbar, Footer, easter eggs
+    layout.tsx                      ← Root layout: fonts, ThemeProvider, Navbar, Footer, easter eggs; site-wide metadata + viewport (themeColor) + WebSite JSON-LD, all sourced from lib/site.ts
     page.tsx                        ← Home: Hero + ActivityFeed + SelectedWork + RecentPosts; JSON-LD Person schema
-    robots.ts                       ← Crawl rules + sitemap pointer (Next.js file-based metadata)
-    sitemap.ts                      ← Auto-generated sitemap from static routes + blog posts
+    robots.ts                       ← Crawl rules + sitemap pointer (reads lib/site.ts)
+    sitemap.ts                      ← Auto-generated sitemap from static routes + blog posts (reads lib/site.ts)
+    manifest.ts                     ← PWA web manifest (name, theme colors, icons) from lib/site.ts
     icon.svg                        ← SVG favicon (Next.js App Router file-based, overrides favicon.ico)
+    apple-icon.tsx                  ← 180×180 apple-touch-icon generated via next/og ImageResponse
+    og/route.tsx                    ← Dynamic OG image (next/og ImageResponse 1200×630); ?title=&type=page|blog&description=
+    feed.xml/route.ts               ← RSS 2.0 feed of blog posts (reads lib/site.ts)
     about/page.tsx                  ← Bio, skills grid, career timeline, principles
     work/page.tsx                   ← Redirect → /work/projects (until more sub-sections exist)
     work/projects/page.tsx          ← Filter pills + ProjectCard grid
     writing/page.tsx                ← Redirect → /writing/blog (until garden/building are live)
     writing/blog/page.tsx           ← Category tabs (URL-synced) + PostCard list
     writing/blog/[slug]/page.tsx    ← MDX post: reading progress, sticky TOC, generateStaticParams
-    travel/page.tsx                 ← WorldMap, stats strip, BucketList
+    travel/page.tsx                 ← Interactive 3D globe, stats strip, destination + wishlist grids
+    play/page.tsx                   ← Tabs: "Where on Earth" geo-guesser + "Comet Run" arcade game
+    api/landsat/route.ts            ← Presigned R2 URLs for Landsat letter tiles (rate-limited)
   components/
     providers.tsx                   ← next-themes ThemeProvider (client wrapper)
     layout/
@@ -140,18 +147,28 @@ src/
       ReadingProgress.tsx           ← Fixed 2px accent bar tracking scroll position
       TableOfContents.tsx           ← Prop-driven (headings from server), IntersectionObserver active
     travel/
-      WorldMap.tsx                  ← react-simple-maps: fills countries (visited=accent, wishlist=green); smart center/zoom when all visited in one continent; city pins on top
-      WorldMapClient.tsx            ← ssr:false wrapper for WorldMap
+      Globe.tsx                     ← cobe WebGL globe: auto-spin, drag-to-rotate, HTML marker dots, click-to-focus; pauses rAF off-screen / tab hidden; colors read from CSS tokens, rebuilt on theme change
+      GlobeClient.tsx               ← ssr:false wrapper for Globe (circular skeleton)
+      GlobeMarkerCard.tsx           ← Hover/tap card for a destination pin
       TravelStats.tsx               ← Visited / continents / wishlist stat strip
-      BucketList.tsx                ← Checkbox list with lazy localStorage initializer
-      BucketListClient.tsx          ← ssr:false wrapper for BucketList
+      DestinationCard.tsx           ← Visited card (collapsible recs) / compact wishlist card
+    play/
+      GeoGuesser.tsx                ← 5-round "Where on Earth": clue image → click map → haversine distance → score
+      GeoGuesserClient.tsx          ← ssr:false wrapper for GeoGuesser
+      GuessMap.tsx                  ← react-simple-maps geoEquirectangular; click→lat/lng is a pure linear inverse
+    games/
+      CometGame.tsx                 ← 2D canvas comet dodger. variant="overlay" (Konami) | "inline" (/play)
     easter-eggs/
-      EasterEggs.tsx                ← Client wrapper (ssr:false must be in client component)
-      KonamiListener.tsx
+      EasterEggs.tsx                ← Client wrapper; owns Konami→CometGame overlay state
+      KonamiListener.tsx            ← Takes onTrigger(); opens the comet game
       DevConsoleArt.tsx
     ui/                             ← shadcn components: button, badge, card, separator, tooltip, tabs, sheet
                                        cloud-image.tsx — CloudImage: next/image wrapper with loading skeleton + error fallback; use for R2/CDN images
+  hooks/
+    use-best-score.ts               ← localStorage high score via useSyncExternalStore (no mount gate, syncs across tabs). Use this instead of a setState-in-effect hydration gate.
   lib/
+    site.ts                         ← Single source of truth for site identity/URLs/social + brand colors; absoluteUrl(), ogImageUrl(). URL from NEXT_PUBLIC_SITE_URL (falls back to prod). Never hardcode the domain elsewhere.
+    geo.ts                          ← haversineKm(), scoreFromDistanceKm()
     utils.ts                        ← cn() helper (clsx + tailwind-merge)
     mdx.ts                          ← getAllPosts(), getPostBySlug() + headings, mdxOptions, extractHeadings()
     garden.ts                       ← getBacklinks(), getAllGardenLinks() — wiki-link [[slug]] graph
@@ -162,13 +179,18 @@ src/
       schema.ts                     ← guestbook_entries, post_views tables; pgvector embeddings stub for Phase 5
   types/
     index.ts                        ← Post, Project, Destination, Book extends MediaBase, Film extends MediaBase, GuestbookEntry, ExperienceItem
-    react-simple-maps.d.ts          ← Hand-written type declarations for react-simple-maps (includes center, onMoveEnd on ZoomableGroup)
+    play.ts                         ← GeoRound, GuessResult, LatLng
+    react-simple-maps.d.ts          ← Hand-written type declarations (includes projection, Line, ZoomableGroup center/onMoveEnd)
+public/
+  geo/countries-110m.json          ← Self-hosted world-atlas topojson (was fetched from the jsdelivr CDN at runtime)
+  play/rounds/                     ← Clue images for the geo-guesser, named {round.id}.jpg
 content/
   blog/hello-world.mdx
   garden/
     what-is-a-digital-garden.mdx
     learning-in-public.mdx
-  travel/destinations.json         ← 5 visited + 5 wishlist destinations (typed as Destination[])
+  travel/destinations.json         ← 4 visited + 6 wishlist destinations (typed as Destination[])
+  play/geo-rounds.json             ← GeoRound[]; falls back to the text hint when an image is missing
   data/
     projects.ts                     ← Project[] + featuredProjects export
     experience.ts                   ← ExperienceItem[]
@@ -223,27 +245,40 @@ eslint.config.mjs
 
 Nav links always point to `/writing` and `/work` — never to sub-pages — so no nav changes are needed when new sub-sections launch.
 
+### Metadata & SEO
+
+- **`lib/site.ts` is the single source of truth** for the domain, identity, social handles, and brand
+  colors. Never hardcode `https://souhardsingh.com` — import `siteConfig`, `absoluteUrl()`, or
+  `ogImageUrl()`. The base URL comes from `NEXT_PUBLIC_SITE_URL` (falls back to prod), so previews get
+  correct canonicals/OG/sitemap/feed automatically.
+- **Root `layout.tsx`** sets `metadataBase`, a title template, default OG/Twitter cards, `alternates`
+  (canonical + RSS), `robots`, `appleWebApp`, and a `WebSite` JSON-LD block.
+- **Per-page metadata**: export `metadata` (or `generateMetadata`) with `title` + `description`; add an
+  OG image via `ogImageUrl(title, 'page' | 'blog', description)`. Title inherits the layout template.
+- **`themeColor` / `colorScheme` / `width` live in the `viewport` export, NOT `metadata`** — Next
+  ignores them in `metadata`. The two `themeColor` entries must match `--bg` (light/dark) in globals.css.
+- **`/og`** renders the card with `next/og` `ImageResponse` (1200×630); it auto-sizes long titles.
+  `apple-icon.tsx` and `manifest.ts` are likewise generated from `siteConfig.brand` — no binary assets.
+
 ### ssr:false pattern
 
-Next.js 16: `next/dynamic` with `ssr: false` **cannot** be called in Server Components. Wrap in a `'use client'` component first (see `WorldMapClient`, `BucketListClient`, `EasterEggs`).
+Next.js 16: `next/dynamic` with `ssr: false` **cannot** be called in Server Components. Wrap in a `'use client'` component first (see `GlobeClient`, `GeoGuesserClient`, `EasterEggs`).
 
 Components that need `ssr: false`:
 
-- `WorldMap` — uses `react-simple-maps` (browser SVG APIs)
-- `BucketList` — reads `localStorage` in the `useState` lazy initializer (safe only in browser)
+- `Globe` — WebGL via cobe
+- `GeoGuesser` — pulls in `react-simple-maps` (browser SVG APIs)
 - `CursorTrail` — uses canvas + `window.matchMedia`
 
 ### What is NOT built yet
 
-| Item                                        | Notes                    |
-| ------------------------------------------- | ------------------------ |
-| OG image edge function (`app/og/route.tsx`) | See 07-infra §4          |
-| RSS feed (`app/feed.xml/route.ts`)          | See 07-infra §5          |
-| CI/CD (GitHub Actions)                      | See 07-infra §2          |
-| `/ask` RAG, Pagefind, CommandPalette        | Phase 5 — needs DB first |
-| Garden graph, `/writing/garden`             | Phase 4                  |
-| Guestbook, `/shelf`, `/now`, `/uses`        | Phase 4 — needs DB       |
-| Tests (Jest, Playwright)                    | Phase 6                  |
+| Item                                 | Notes                    |
+| ------------------------------------ | ------------------------ |
+| CI/CD (GitHub Actions)               | See 07-infra §2          |
+| `/ask` RAG, Pagefind, CommandPalette | Phase 5 — needs DB first |
+| Garden graph, `/writing/garden`      | Phase 4                  |
+| Guestbook, `/shelf`, `/now`, `/uses` | Phase 4 — needs DB       |
+| Tests (Jest, Playwright)             | Phase 6                  |
 
 See `PLANS.md` for priority order and full status table.
 
@@ -300,9 +335,19 @@ Three font variables injected on `<html>` by the root layout:
 
 All Framer Motion animations must check `useReducedMotion()`. Use `PageWrapper` for page-level transitions.
 
+**Never branch SSR-rendered markup on `useReducedMotion()`.** It returns `false` on the server, so
+`initial={reduced ? {} : {...}}` or `{!reduced && <Orbs/>}` makes the server HTML disagree with a
+reduced-motion client and throws a React hydration error. Keep `initial` and the rendered tree
+constant; express the preference through `transition={{ duration: reduced ? 0 : 0.4 }}` (and a
+resting `animate` value). `whileHover`/`whileTap` are safe to branch — they never affect SSR output.
+Components rendered only behind `ssr: false` are exempt.
+
 ### Easter Eggs
 
-`EasterEggs` is a client component mounted once in `src/app/layout.tsx`. Easter egg logic stays out of page files. In Next.js 16, `ssr: false` with `next/dynamic` cannot be used in Server Components — wrap in a `'use client'` component first.
+`EasterEggs` is a client component mounted once in `src/app/layout.tsx`. It owns the Konami →
+`CometGame` overlay state; `KonamiListener` just calls `onTrigger()`. Easter egg logic stays out of
+page files. In Next.js 16, `ssr: false` with `next/dynamic` cannot be used in Server Components —
+wrap in a `'use client'` component first.
 
 ## Key Constraints
 

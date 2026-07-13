@@ -6,6 +6,7 @@ import { ReadingProgress } from '@/components/writing/ReadingProgress'
 import { TableOfContents } from '@/components/writing/TableOfContents'
 import { mdxComponents } from '@/components/writing/MDXComponents'
 import { getAllPosts, getPostBySlug, mdxOptions } from '@/lib/content/mdx'
+import { ogImageUrl } from '@/lib/site'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 
@@ -25,9 +26,12 @@ export async function generateMetadata({
       title: frontmatter.title,
       description: frontmatter.description,
       openGraph: {
+        type: 'article',
         title: frontmatter.title,
         description: frontmatter.description,
-        images: [`/og?title=${encodeURIComponent(frontmatter.title)}&type=blog`],
+        publishedTime: frontmatter.date,
+        modifiedTime: frontmatter.updated ?? frontmatter.date,
+        images: [ogImageUrl(frontmatter.title, 'blog', frontmatter.description)],
       },
       twitter: { card: 'summary_large_image' },
     }

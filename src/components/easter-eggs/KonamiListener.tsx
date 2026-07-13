@@ -15,7 +15,7 @@ const KONAMI = [
   'a',
 ]
 
-export function KonamiListener() {
+export function KonamiListener({ onTrigger }: { onTrigger?: () => void }) {
   useEffect(() => {
     let idx = 0
     const handler = (e: KeyboardEvent) => {
@@ -27,6 +27,7 @@ export function KonamiListener() {
             '%c✨ Konami code! You found a secret.',
             'color: #D4A853; font-size: 16px; font-weight: bold;'
           )
+          onTrigger?.()
         }
       } else {
         idx = 0
@@ -34,7 +35,7 @@ export function KonamiListener() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [])
+  }, [onTrigger])
 
   return null
 }

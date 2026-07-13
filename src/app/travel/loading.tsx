@@ -5,8 +5,10 @@ export default function Loading() {
     <div className="mx-auto max-w-5xl px-4 pt-16 sm:px-6">
       <Skeleton className="mb-3 h-12 w-36" />
       <Skeleton className="mb-10 h-5 w-64" />
-      {/* Map */}
-      <Skeleton className="h-[420px] w-full rounded-xl" />
+      {/* Globe */}
+      <div className="flex justify-center">
+        <Skeleton className="aspect-square w-full max-w-[560px] rounded-full" />
+      </div>
       {/* Stat pills */}
       <div className="mt-6 flex gap-2.5">
         <Skeleton className="h-9 w-32 rounded-full" />

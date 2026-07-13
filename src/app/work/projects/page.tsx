@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { ProjectFilter } from '@/components/work/ProjectFilter'
 import { projects } from '@content/data/projects'
+import { ogImageUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Projects',
     description: 'Things I have built — web apps, backend systems, and side projects.',
-    images: ['/og?title=Projects&type=page'],
+    images: [
+      ogImageUrl(
+        'Projects',
+        'page',
+        'Things I have built — web apps, backend systems, and side projects.'
+      ),
+    ],
   },
   twitter: { card: 'summary_large_image' },
 }

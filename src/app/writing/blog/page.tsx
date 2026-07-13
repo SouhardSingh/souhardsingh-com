@@ -5,6 +5,7 @@ import { CategoryFilter } from '@/components/writing/CategoryFilter'
 import { PostCard } from '@/components/writing/PostCard'
 import { getAllPosts } from '@/lib/content/mdx'
 import type { PostCategory } from '@/types'
+import { ogImageUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Blog',
     description: 'Writing on engineering, travel, and the things in between.',
-    images: ['/og?title=Blog&type=page'],
+    images: [
+      ogImageUrl('Blog', 'page', 'Writing on engineering, travel, and the things in between.'),
+    ],
   },
   twitter: { card: 'summary_large_image' },
 }
