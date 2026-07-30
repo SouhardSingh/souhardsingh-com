@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { getRandomLetterKey, getLetterMeta, SUPPORTED_CHARS } from '@/lib/landsat'
+import { getRandomTile, tileKey, tileMeta } from '@/lib/landsat'
 import { getPresignedUrl } from '@/lib/r2'
 import { checkRateLimit } from '@/lib/rate-limit'
 
@@ -56,18 +56,12 @@ export async function GET(req: NextRequest) {
     name.split('').map(async (char) => {
       if (char === ' ') return { char: ' ', url: null, meta: null }
 
-      const upper = char.toUpperCase()
-      if (!SUPPORTED_CHARS.has(upper)) return { char, url: null, meta: null }
+      const tile = getRandomTile(char)
+      if (!tile) return { char, url: null, meta: null }
 
-      const key = getRandomLetterKey(upper)
-      if (!key) return { char, url: null, meta: null }
-
-      // Extract index from key for metadata lookup
-      const idx = parseInt(key.split('/').pop()?.replace('.jpg', '') ?? '0', 10)
-      const meta = getLetterMeta(upper, idx)
-
+      const meta = tileMeta(tile)
       try {
-        const url = await getPresignedUrl(key, 300)
+        const url = await getPresignedUrl(tileKey(char, tile), 300)
         return { char, url, meta }
       } catch {
         return { char, url: null, meta }

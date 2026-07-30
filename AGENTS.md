@@ -168,6 +168,7 @@ src/
     use-best-score.ts               ← localStorage high score via useSyncExternalStore (no mount gate, syncs across tabs). Use this instead of a setState-in-effect hydration gate.
   lib/
     site.ts                         ← Single source of truth for site identity/URLs/social + brand colors; absoluteUrl(), ogImageUrl(). URL from NEXT_PUBLIC_SITE_URL (falls back to prod). Never hardcode the domain elsewhere.
+    landsat.ts                      ← LANDSAT_LETTERS: the ONE config for letter tiles (char → variants). Each tile carries its real R2 basename in `file` — keys are never index-based, so uploads can be named after the place they show. Supported chars are derived from the object; don't add a parallel set/metadata map. Helpers: tileKey(), tileMeta(), getRandomTile().
     geo.ts                          ← haversineKm(), scoreFromDistanceKm()
     utils.ts                        ← cn() helper (clsx + tailwind-merge)
     mdx.ts                          ← getAllPosts(), getPostBySlug() + headings, mdxOptions, extractHeadings()

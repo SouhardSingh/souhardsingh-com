@@ -122,10 +122,10 @@ function LetterTile({
         </>
       ) : (
         /* Fallback: styled gradient tile with letter */
-        <div className="from-surface-2 to-surface-3 relative flex h-full w-full items-center justify-center bg-gradient-to-br">
+        <div className="from-surface-2 to-surface relative flex h-full w-full items-center justify-center bg-gradient-to-br">
           <span
             className={cn(
-              'font-display font-bold tracking-tight text-white/10 select-none',
+              'font-display text-text-muted/40 font-bold tracking-tight select-none',
               isBanner ? 'text-6xl sm:text-7xl md:text-8xl lg:text-9xl' : 'text-2xl'
             )}
           >
