@@ -1,0 +1,136 @@
+---
+title: Spelling My Name With Satellites
+description: How the Landsat name banner on this site works — presigned R2 URLs, a config that survives renames, and failing gracefully when the network doesn't cooperate.
+date: 2026-07-13
+category: engineering
+tags: [landsat, nextjs, r2, design]
+published: true
+---
+
+The banner at the top of my home page isn't a font. Each letter is a real Landsat scene — a river delta, a mountain range, a stretch of desert that happens to bend the right way. NASA and the USGS have been doing this for years with their _Your Name in Landsat_ project, and I wanted my own version: my name, spelled in terrain.
+
+Type something and watch it re-spell itself:
+
+<LandsatName mode="interactive" />
+
+The idea is simple. The interesting part was everything around it.
+
+## Why the images aren't in the repo
+
+Satellite imagery is big. Twenty-six letters at a readable resolution is tens of megabytes, and none of it belongs in git — it's not source, it changes independently of the code, and it would bloat every clone forever.
+
+So the tiles live in Cloudflare R2, and the app never links them directly. A small API route mints a **presigned URL** valid for five minutes:
+
+```ts
+const url = await getPresignedUrl(tileKey(char, tile), 300)
+```
+
+The bucket stays private. The browser gets a short-lived URL that works and then stops working. Nobody can hotlink my letters into their own page, and I'm not paying to serve someone else's site.
+
+That route is also rate-limited per IP, because an endpoint that signs URLs on demand is exactly the kind of thing that gets hammered:
+
+```ts
+const { allowed, remaining, resetAt } = checkRateLimit(ip)
+if (!allowed) {
+  return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { ... } })
+}
+```
+
+## The config mistake I had to undo
+
+My first version stored the tiles by index:
+
+```ts
+// don't do this
+return `landsat/letters/${upper}/${idx}.jpg`
+```
+
+Three separate objects had to agree for a single letter to render: one map for how many variants existed, one for the metadata, and a set for which characters were supported. The metadata was keyed by strings like `"A/0"`.
+
+This is the kind of design that looks tidy right up until it meets reality. Real satellite images don't arrive named `0.jpg` — they arrive named after the place they show. The moment I uploaded `atacama-desert.jpg`, the index was a lie, and the three maps could drift out of sync in three different ways with no type error to catch it.
+
+<Callout type="warning">
+  Any time a lookup key is a position rather than an identity, you're one rename away from a silent
+  bug. Positions change. Names don't.
+</Callout>
+
+Now there's one config, and each tile carries its own filename:
+
+```ts
+export const LANDSAT_LETTERS: Record<string, LandsatTile[]> = {
+  A: [
+    {
+      file: 'atacama-desert',
+      location: 'Atacama Desert, Chile',
+      lat: -23.8,
+      lon: -69.3,
+      sensor: 'Landsat 9',
+    },
+  ],
+  B: [
+    {
+      file: 'lake-baikal',
+      location: 'Lake Baikal, Russia',
+      lat: 53.5,
+      lon: 108.2,
+      sensor: 'Landsat 8',
+    },
+  ],
+  // …
+}
+```
+
+Which characters are supported is now _derived_ from that object instead of maintained beside it. Adding a variant means pushing onto an array. Renaming a file means editing the one string that names it. There's no second place to forget.
+
+The key builder collapsed to a line, and the API route stopped doing archaeology on its own filenames to recover an index it never should have needed:
+
+```ts
+export function tileKey(char: string, tile: LandsatTile): string {
+  return `landsat/letters/${char.toUpperCase()}/${tile.file}.${tile.ext ?? 'jpg'}`
+}
+```
+
+## Failing without looking broken
+
+A component that depends on a network round trip to a private bucket has a lot of ways to disappoint you. The bucket might not be configured. The signature might expire while the tab sits in the background. A single letter might not be uploaded yet.
+
+None of those should produce a blank rectangle. So the component degrades in layers:
+
+- **Loading** — skeleton tiles at the exact dimensions of the real ones, so nothing shifts when the images land.
+- **A letter has no tile** — render the character itself in a soft gradient block. Still legible, still on-brand.
+- **The fetch fails entirely** — synthesize the fallback tiles from the name string, so the banner always renders something shaped like a word.
+- **An individual image 404s** — `onError` flips that one tile to the fallback without touching its neighbours.
+
+<Aside>
+  The rule I keep coming back to: a component should never render *nothing*. Empty space reads as a
+  bug even when the failure is expected and handled.
+</Aside>
+
+## The hydration trap
+
+One bug from this build is worth calling out, because it's easy to reproduce and hard to notice.
+
+The tiles animate in with a stagger. Naturally I gated the animation on the user's motion preference:
+
+```tsx
+// looks correct, is not
+initial={reduced ? {} : { opacity: 0, y: 8 }}
+```
+
+`useReducedMotion()` returns `false` on the server — it has no media query to read. So the server rendered `opacity: 0` while a reduced-motion browser rendered no style at all, the markup disagreed, and React threw a hydration error. Not on my machine, of course. Only for the people who'd asked the site to calm down.
+
+The fix is to keep the rendered output identical and vary only the timing:
+
+```tsx
+initial={{ opacity: 0, y: 8 }}
+animate={{ opacity: 1, y: 0 }}
+transition={{ duration: reduced ? 0 : 0.35 }}
+```
+
+Same DOM on both sides, no animation for anyone who opted out. `whileHover` is safe to branch on — it never participates in server rendering.
+
+## Worth it?
+
+It's a banner. It took far longer than a banner should. But it's the thing people notice first, it taught me where my storage abstraction leaked, and it surfaced a hydration bug that was quietly affecting every page on the site.
+
+The best decoration is the kind that makes you fix your foundations.
